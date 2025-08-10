@@ -1,0 +1,111 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 60px;
+  width: 100%;
+  background-color: #4285f4;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 1000;
+}
+
+.sidebar {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 250px;
+  height: calc(100vh - 60px);
+  background-color: #fff;
+  padding-top: 20px;
+  overflow-y: auto;
+}
+
+.main-content {
+  margin-top: 60px;
+  margin-left: 250px;
+  padding: 20px;
+}
+</style>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Médecin - Tableau de bord</title>
+    <link rel="shortcut icon" href="{% static 'assets/images/favicon.png' %}" type="image/x-icon" />
+    <link href="{% static 'assets/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'assets/css/responsive.css' %}" rel="stylesheet" type="text/css" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+
+<body>
+
+<!-- TOPBAR MÉDECIN -->
+<div class="page-topbar gradient-blue1" style="min-height:60px; display:flex; align-items:center; justify-content:space-between; padding:0 30px;">
+    <div style="display:flex; align-items:center;">
+        <img src="{% static 'assets/images/logo.png' %}" alt="Logo" style="height:38px; margin-right:12px;">
+    </div>
+    <div class="dropdown" style="display:flex; align-items:center; gap:15px;">
+        <a href="#" 
+        class="dropdown-toggle" 
+        data-bs-toggle="dropdown" 
+        aria-expanded="false"
+        style="display:flex; align-items:center; gap:10px; color:white; text-decoration:none;">
+            <img src="{% if request.user.photo %}{{ request.user.photo.url }}{% else %}{% static 'data/profile/avatar-1.png' %}{% endif %}" 
+                class="img-circle" 
+                style="width:35px; height:35px; object-fit:cover;">
+            <span>{{ request.user.first_name }} {{ request.user.last_name }}</span>
+            <i class="fa fa-caret-down"></i>
+        </a>
+        <div class="dropdown-menu" style="padding:15px; min-width:250px;">
+            <h6 class="dropdown-header">Mon Profil</h6>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{% url 'profil_medecin' %}">
+                <i class="fa fa-user-edit"></i> Mon profil
+            </a><br>
+            <a class="dropdown-item text-danger" href="{% url 'deconnexion' %}">
+                <i class="fa fa-sign-out-alt"></i> Déconnexion
+            </a>
+        </div>
+    </div>
+
+</div>
+<!-- END TOPBAR -->
+
+<!-- SIDEBAR MÉDECIN -->
+<aside class="sidebar" style="width:250px;position:fixed;top:60px;left:0;height:100vh;background-color:#fff;padding:20px;">
+    <h4>Menu Médecin</h4>
+    <ul class="nav flex-column">
+        <li><a class="nav-link" href="#"><i class="fa fa-home"></i> Tableau de bord</a></li>
+        <li><a class="nav-link" href="#"><i class="fa fa-calendar-check"></i> Mes Rendez-vous</a></li>
+        <li><a class="nav-link" href="{% url 'mes_patients' %}"><i class="fa fa-user-injured"></i> Mes Patients</a></li>
+        <li><a class="nav-link" href="#"><i class="fa fa-file-prescription"></i> Prescrire Ordonnance</a></li>
+        <li><a class="nav-link" href="#"><i class="fa fa-folder-open"></i> Dossiers Médicaux</a></li>
+        <li><a class="nav-link" href="#"><i class="fa fa-notes-medical"></i> Historique de soins</a></li>
+    </ul>
+</aside>
+
+<!-- ✅ CONTENU PAGE -->
+<main style="margin-left:250px; padding: 80px 30px 30px 30px;">
+    {% block content %}
+    <!-- Contenu dynamique du médecin -->
+    {% endblock %}
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

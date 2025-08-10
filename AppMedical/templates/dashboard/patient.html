@@ -1,0 +1,249 @@
+{% extends 'dashboard/base_patient.html'%}
+{% load static %}
+{% block content %}
+
+
+    <div class="page-container row-fluid container-fluid">
+        <section id="main-content">
+            <div class="wrapper main-wrapper row">
+                <!-- Patient Main Info -->
+                <div class="col-lg-4">
+                    <section class="box">
+                        <div class="content-body p">
+                            <div class="row">
+                                <div class="doctors-list patient relative">
+                                    <div class="doctors-head relative text-center">
+                                        <div class="patient-img img-circle">
+                                            {% if patient.profile_image %}
+                                                <img src="{{ patient.profile_image.url }}" class="rad-50 center-block" alt="">
+                                            {% else %}
+                                                <img src="{% static 'data/profile/avatar-1.png' %}" class="rad-50 center-block" alt="">
+                                            {% endif %}
+                                        </div>
+                                        <h3 class="header w-text relative bold">
+                                            {{ patient.nom }} {{ patient.prenom }}
+                                        </h3>
+                                        <p class="desc g-text relative">
+                                            Email : {{ patient.user.email }}
+                                        </p>
+                                        <p class="desc g-text relative">
+                                            {% if details %}{{ details.description }}{% endif %}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Patient Info Cards -->
+                    <div class="row patients-info relative">
+                        <div class="col-sm-6 col-xs-12">
+                            <div class="patient-card has-shadow2">
+                                <div class="doc-info-wrap">
+                                    <div class="patient-info">
+                                        <h5 class="bold">{{ patient.genre }}</h5>
+                                        <h6>Patient Gender</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xs-12">
+                            <div class="patient-card has-shadow2">
+                                <div class="doc-info-wrap">
+                                    <div class="patient-info">
+                                        <h5 class="bold">Age: {{ patient.age }}</h5>
+                                        <h6>Years Old</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xs-12">
+                            <div class="patient-card has-shadow2">
+                                <div class="doc-info-wrap">
+                                    <div class="patient-info">
+                                        <h5 class="bold">{{ details.taille }} Cm</h5>
+                                        <h6>Patient Height</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-xs-12">
+                            <div class="patient-card has-shadow2">
+                                <div class="doc-info-wrap">
+                                    <div class="patient-info">
+                                        <h5 class="bold">{{ details.poids }}Kg</h5>
+                                        <h6>Patient Weight</h6>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Reminder -->
+                    <div class="col-xs-12 mb-30">
+                        <div class="reminder-wrapper has-shadow2">
+                            <div class="reminder-icon">
+                                <img src="{% static 'data/hos-dash/clock.png' %}" width="60" alt="">
+                            </div>
+                            <div class="reminder-content">
+                                <h4 class="w-text bold">Reminder Alarm</h4>
+                                <h5 class="g-text">ask about medicine</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Patient Details and Graphs -->
+                <div class="col-lg-8 col-md-12">
+                    <div class="row">
+                        <!-- Blood Levels Chart -->
+                        <div class="col-xs-12 col-md-7">
+                            <section class="box">
+                                <header class="panel_header">
+                                    <h2 class="title pull-left">Blood Levels</h2>
+                                </header>
+                                <div class="content-body">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div><canvas id="bar-chartjs" height="450" width="600"></canvas></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                        <!-- Notifications -->
+                        <div class="col-xs-12 col-md-5">
+                            <section class="box">
+                                <header class="panel_header">
+                                    <h2 class="title pull-left">Notifications</h2>
+                                </header>
+                                <div class="content-body">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <ul class="project-activity list-unstyled mb-0">
+                                                <!-- ...notifications content... -->
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                    <!-- Patient Medical Info -->
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <section class="box gradient-blue" style="padding:20px">
+                                <div class="patient-personal mb-0">
+                                    <h4 class="w-text">Blood type :</h4>
+                                    <p class="mb-0 g-text">{{ details.groupe_sanguin }}</p>
+                                </div>
+                                <div class="patient-personal mb-0">
+                                    <h4 class="w-text">Allergies :</h4>
+                                    <p class="mb-0 g-text">{{ details.allergies }}</p>
+                                </div>
+                                <div class="patient-personal mb-0">
+                                    <h4 class="w-text">Diseases :</h4>
+                                    <p class="mb-0 g-text">{{ details.antecedants_medicaux }}</p>
+                                </div>
+                                <div class="patient-personal mb-0">
+                                    <h4 class="w-text">Pressure :</h4>
+                                    <p class="mb-0 g-text">{{ details.pression }} mmHG</p>
+                                </div>
+                                <div class="patient-personal mb-0">
+                                    <h4 class="w-text">Temperature :</h4>
+                                    <p class="mb-0 g-text">{{ details.temperature }} degrée</p>
+                                </div>
+                            </section>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <section class="box gradient-pink" style="padding:20px">
+                                <div class="patient-personal v2 mb-0">
+                                    <h4 class="w-text"> <span class="text-info bold">-- </span> Regular checkups</h4>
+                                </div>
+                                <div class="patient-personal v2 mb-0">
+                                    <h4 class="w-text">{{ details.medecin_traitant }}</h4>
+                                    <p class="mb-0 g-text">{{ details.examen_regulier }}</p>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                    <!-- Patient Activities Chart -->
+                    <div class="col-xs-12 col-md-5">
+                        <section class="box">
+                            <header class="panel_header">
+                                <h2 class="title pull-left">Patient Activities</h2>
+                            </header>
+                            <div class="content-body pb0">
+                                <div class="row">
+                                    <div class="col-md-10 col-sm-10 col-xs-10 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">
+                                        <canvas id="radar-chartjs" width="300" height="300"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                    <!-- Medical Stats -->
+                    <div class="col-md-6 col-xs-12">
+                        <div class="r1_graph1 db_box db_box_large has-shadow2">
+                            <div class="pat-info-wrapper">
+                                <div class="pat-info text-left">
+                                    <h5 class=''>Blood pressure</h5>
+                                    <h6>In the normal</h6>
+                                </div>
+                                <div class="pat-val relative">
+                                    <h4 class="value p-text"> {{ details.tension_arterielle }}<span>mmHG</span></h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xs-12">
+                        <div class="r1_graph1 db_box db_box_large has-shadow2">
+                            <div class="pat-info-wrapper">
+                                <div class="pat-info text-left">
+                                    <h5 class=''>Heart Rate</h5>
+                                    <h6 class="red-text">Above the normal</h6>
+                                </div>
+                                <div class="pat-val relative">
+                                    <h4 class="value red-text">{{ details.frequence_cardiaque }}<span>Per min</span></h4>
+                                </div>
+                            </div>
+                            <span class="sparklinedash">Loading...</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xs-12">
+                        <div class="r1_graph1 db_box db_box_large has-shadow2">
+                            <div class="pat-info-wrapper">
+                                <div class="pat-info text-left">
+                                    <h5 class=''>Glucose Rate</h5>
+                                    <h6>In the normal</h6>
+                                </div>
+                                <div class="pat-val relative">
+                                    <h4 class="value green-text"><i class="complete fa fa-arrow-up"></i>{{ details.glycemie }}<span>mg/dl</span></h4>
+                                </div>
+                            </div>
+                            <span class="sparkline8">Loading...</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6 col-xs-12">
+                        <div class="r1_graph1 db_box db_box_large has-shadow2">
+                            <div class="pat-info-wrapper">
+                                <div class="pat-info text-left">
+                                    <h5 class=''>Cholesterol</h5>
+                                    <h6>In the normal</h6>
+                                </div>
+                                <div class="pat-val relative">
+                                    <h4 class="value blue-text"><i class="cancelled fa fa-arrow-down"></i>{{ details.cholesterole }}<span>mg/dl</span></h4>
+                                </div>
+                            </div>
+                            <span class="sparkline9">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- JS SCRIPTS -->
+    <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/js/scripts.js' %}"></script>
+</body>
+</html>
+{% endblock %}

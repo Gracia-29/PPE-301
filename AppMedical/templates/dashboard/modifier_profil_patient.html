@@ -1,0 +1,28 @@
+{% extends 'dashboard/base_patient.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow p-4" style="max-width: 600px; margin: auto;">
+        <h4 class="text-center mb-4">📝 Modifier mon profil</h4>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="mb-3">
+                    {{ field.label_tag }}
+                    {{ field|add_class:"form-control" }}
+                    {% if field.errors %}
+                        <div class="text-danger small">{{ field.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary px-4">Enregistrer</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

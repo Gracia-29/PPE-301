@@ -1,0 +1,26 @@
+{% extends 'dashboard/base_medecin.html'%}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-primary">✏ Modifier le dossier médical de {{ dossier.patient.username }}</h2>
+
+    <form method="post" enctype="multipart/form-data" class="mt-4">
+        {% csrf_token %}
+
+        {% for field in form %}
+            <div class="mb-3">
+                <label class="form-label">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}
+                    <div class="text-danger small">
+                        {{ field.errors|striptags }}
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-success">💾 Enregistrer</button>
+        <a href="{% url 'voir_dossier_medical' dossier.patient.id %}" class="btn btn-secondary">↩ Annuler</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'dashboard/base_patient.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+    h2 {
+        font-weight: bold;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+    .table th, .table td {
+        vertical-align: middle;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 position-relative">
+
+    <!-- Bouton en haut à droite -->
+    <div class="d-flex justify-content-end mb-3">
+        <a href="{% url 'ajouter_rendez_vous' %}" class="btn btn-primary">
+            ➕ Ajouter un rendez-vous
+        </a>
+    </div>
+
+    <!-- Titre -->
+    <h2 class="text-primary mb-3">🗓️ Mes Rendez-vous</h2>
+
+    <!-- Tableau dans une carte -->
+    <div class="card shadow">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover mb-0 text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Hôpital</th>
+                            <th>Médecin</th>
+                            <th>Date</th>
+                            <th>Heure</th>
+                            <th>Motif</th>
+                            <th>Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rdv in rdvs %}
+                        <tr>
+                            <td>{{ rdv.hopital.nom }}</td>
+                            <td>{{ rdv.medecin|default:"_" }}</td>
+                            <td>{{ rdv.date }}</td>
+                            <td>{{ rdv.heure }}</td>
+                            <td>{{ rdv.motif }}</td>
+                            <td>
+                                {% if rdv.statut == 'valide' %}
+                                    <span class="badge bg-success">{{ rdv.get_statut_display }}</span>
+                                {% elif rdv.statut == 'refuse' %}
+                                    <span class="badge bg-danger">{{ rdv.get_statut_display }}</span>
+                                {% elif rdv.statut == 'en_attente' %}
+                                    <span class="badge bg-warning text-dark">{{ rdv.get_statut_display }}</span>
+                                {% else %}
+                                    {{ rdv.get_statut_display }}
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted">Aucun rendez-vous pour l’instant.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

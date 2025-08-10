@@ -1,0 +1,15 @@
+{% extends 'dashboard/base_admin.html' %}
+{% load static %}
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow p-4">
+        <h4 class="mb-4">👩‍⚕️ Assigner des patients au Dr. {{ medecin.user.get_full_name }}</h4>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary">Assigner</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,37 @@
+
+{% extends 'dashboard/base_admin.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Demandes en attente</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Médecin</th>
+                <th>Spécialité</th>
+                <th>Hopital</th>
+                <th>Actions</th>
+                <th>Assigner des patients</th>
+            </tr>
+        </thead>
+        <tbody>
+             {% for medecin in medecins %}
+            <tr>
+                <td>{{ medecin.user.get_full_name }}</td>
+                <td>{{ medecin.specialite }}</td>
+                <td>{{ medecin.hopital.nom }}</td>
+                <td>
+                   <a href="{% url 'envoyer_identifiants' medecin.id %}" class="btn btn-sm btn-primary">Envoyer les identifiants</a>
+                </td>
+                <td>
+                    <a href="{% url 'assign_patients' medecin.id %}" class="btn btn-sm btn-success">Assigner des patients</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">Aucun médecin enregistrer.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
