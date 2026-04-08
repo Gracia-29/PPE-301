@@ -4,6 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import *
 from django.contrib.auth import authenticate
 from django.core.exceptions import ValidationError
+from django.forms import inlineformset_factory
 
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
@@ -95,6 +96,12 @@ class PersonneAPrevenirForm(forms.ModelForm):
     class Meta:
         model = PersonneAPrevenir
         fields = ['nom', 'relation', 'telephone', 'email']
+        widget = {
+            'nom' : forms.Textarea(attrs= {'class': 'form-control', 'rows': 3}),
+            'relation' : forms.CharField(max_length=150),
+            'email' : forms.EmailField(),
+            'telephone' : forms.CharField(max_length=150),
+        }
 
 
 
@@ -197,6 +204,16 @@ class PatientUpdateForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ['first_name', 'last_name', 'email', 'telephone', 'adresse', 'genre', 'date_naissance', 'photo']
+        widgets = {
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Prénom'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
+            'telephone': forms.TextInput(attrs={'class': 'form-control', 'type': 'tel', 'placeholder': 'Numéro de téléphone'}),
+            'adresse': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Adresse'}),
+            'genre': forms.Select(attrs={'class': 'form-select'}),
+            'date_naissance': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'photo': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
+        }
 
 
 class AssignPatientsForm(forms.ModelForm):
@@ -232,8 +249,6 @@ class SuiviMedicalForm(forms.ModelForm):
         }
 
 
-
-
 class DossierMedicalForm(forms.ModelForm):
     class Meta:
         model = DossierMedical
@@ -250,3 +265,45 @@ class DossierMedicalForm(forms.ModelForm):
             "infos_complementaires": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
         }
 
+
+class OrdonnanceForm(forms.ModelForm):
+    class Meta:
+        model = Ordonnance
+        fields = ['observations']
+        widgets = {
+            'observations': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
+        }
+
+class MedicamentPrescritForm(forms.ModelForm):
+    class Meta:
+        model = MedicamentPrescrit
+        fields = ['nom', 'dosage', 'frequence', 'duree']
+        widgets = {
+            'nom': forms.TextInput(attrs={'class': 'form-control'}),
+            'dosage': forms.TextInput(attrs={'class': 'form-control'}),
+            'frequence': forms.TextInput(attrs={'class': 'form-control'}),
+            'duree': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+# Création du formset lié à Ordonnance
+MedicamentFormSet = inlineformset_factory(
+    Ordonnance,
+    MedicamentPrescrit,
+    form=MedicamentPrescritForm,
+    extra=1,
+    can_delete=True
+)
+
+
+class ValidationRendezVousForm(forms.ModelForm):
+    medecin = forms.ModelChoiceField(queryset=Medecin.objects.none(), required=True, label="Attribuer un médecin")
+
+    class Meta:
+        model = RendezVous
+        fields = ['medecin']
+
+    def __init__(self, *args, **kwargs):
+        hopital = kwargs.pop('hopital', None)
+        super().__init__(*args, **kwargs)
+        if hopital:
+            self.fields['medecin'].queryset = Medecin.objects.filter(hopital=hopital)

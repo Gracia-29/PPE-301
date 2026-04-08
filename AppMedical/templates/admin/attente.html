@@ -1,0 +1,43 @@
+{% extends 'hopital/base_admin_hopital.html' %}
+{% block content %}
+<section id="main-content" class=" ">
+<div class="container mt-4">
+    <h2>Demandes en attente</h2>
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Patient</th>
+                <th>Hôpital</th>
+                <th>Date demande</th>
+                <th>Groupe sanguin</th>
+                <th>Antécédents</th>
+                <th>Allergies</th>
+                <th>Informations complementaire</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for demande in demandes %}
+            <tr>
+                <td>{{ demande.patient.first_name }} {{ demande.patient.last_name }}</td>
+                <td>{{ demande.hopital.nom }}</td>
+                <td>{{ demande.date_demande }}</td>
+                <td>{{ demande.groupe_sanguin }}</td>
+                <td>{{ demande.antecedents }}</td>
+                <td>{{ demande.allergies }}</td>
+                <td>{{ demande.informations_complementaires }}</td>
+                <td>
+                    <a href="{% url 'approuver_demande' demande.id %}" class="btn btn-success btn-sm">Approuver</a>
+                    <a href="{% url 'refuser_demande' demande.id %}" class="btn btn-danger btn-sm">Refuser</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">Aucune demande en attente.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</section>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "hopital/base_admin_hopital.html" %}
+{% block content %}
+
+<section id="main-content" class=" ">
+            <div class="wrapper main-wrapper row" style=''>
+
+                <div class='col-xs-12'>
+                    <div class="page-title">
+
+                        <div class="pull-left">
+                            <!-- PAGE HEADING TAG - START -->
+                            <h1 class="title">All Patients</h1>
+                            <!-- PAGE HEADING TAG - END -->
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+                <!-- MAIN CONTENT AREA STARTS -->
+
+                <div class="col-lg-4 col-md-6">
+                    <section class="box ">
+                        <div class="content-body p">
+                        {% if demandes %}
+                            <div class="row">
+                               {% for demande in demandes %}
+                                <div class="doctors-list patient relative">
+                                    <div class="doctors-head relative text-center">
+                                        <div class="patient-img img-circle">
+                                            <img src="{{ demande.patient.photo.url }}" class="rad-50 center-block" style="width: 120px; height: 120px; object-fit: cover;" >
+                                            <div class="stutas recent"></div>
+                                        </div>
+                                        <h3 class="header w-text relative bold">Name : {{ demande.patient.first_name }} {{ demande.patient.last_name }}</h3>
+                                        
+                                    </div>
+                                    <div class="row">
+                                        <div class="patients-info relative" >
+                                            <div class="col-sm-6 col-xs-12">
+                                                <div class="patient-card has-shadow2">
+                                                    <div class="doc-info-wrap">
+                                                        <div class="patient-info">
+                                                            <h5 class="bold">{{ demande.patient.genre }}</h5>
+                                                            <h6>Patient  Gender</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-xs-12">
+                                                <div class="patient-card has-shadow2">
+                                                    <div class="doc-info-wrap">
+                                                        <div class="patient-info">
+                                                            <h5 class="bold">{{ demande.patient.date_naissance }}</h5>
+                                                            <h6>Date of Birth</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                    </div><!-- end row -->
+                                    
+                                    <div class="col-xs-12 mb-30">
+                                        <div class="form-group no-mb">
+                                            <button type="button" class="btn btn-primary btn-lg gradient-blue" style="width:100%"> View Profile</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info text-center">
+                                Aucune demande validée.
+                            </div>
+                        {% endif %}   
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </section>
+        {% endblock %}
+
+                

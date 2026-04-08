@@ -1,0 +1,18 @@
+{% extends "medecin/base_medecin.html" %}
+{% block content %}
+<h2>Mes ordonnances prescrites</h2>
+
+{% if ordonnances %}
+    <ul>
+    {% for ordonnance in ordonnances %}
+        <li>
+            Ordonnance #{{ ordonnance.id }} - Patient : {{ ordonnance.patient.get_full_name }} - Date : {{ ordonnance.date_creation|date:"d/m/Y" }}
+            <a href="{% url 'telecharger_ordonnance' ordonnance.id %}">Télécharger</a>
+            <!-- ou lien vers détail, modification, etc. -->
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Aucune ordonnance prescrite pour le moment.</p>
+{% endif %}
+{% endblock %}

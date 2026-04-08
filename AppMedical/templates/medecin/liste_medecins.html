@@ -1,0 +1,112 @@
+
+{% extends 'hopital/base_admin_hopital.html' %}
+{% block content %}
+<section id="main-content" class=" ">
+            <div class="wrapper main-wrapper row" style=''>
+
+                <div class='col-xs-12'>
+                    <div class="page-title">
+
+                        <div class="pull-left">
+                            <!-- PAGE HEADING TAG - START -->
+                            <h1 class="title">All Doctors</h1>
+                            <!-- PAGE HEADING TAG - END -->
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+                <!-- MAIN CONTENT AREA STARTS -->
+
+                {% if medecins %}
+                    <div class="col-lg-4 col-md-6">
+                        <section class="box ">
+                            <div class="content-body p">
+                                <div class="row">
+                                {% for medecin in medecins %}
+                                    <div class="doctors-list patient relative">
+                                        <div class="doctors-head relative text-center">
+                                            <div class="doctor-card has-shadow">
+                                                <div class="doc-info-wrap text-left">
+                                                    <div class="doctor-img">
+                                                        <img src="../data/hos-dash/doc1.jpg" alt="">
+                                                    </div>
+                                                    <div class="doc-info">
+                                                        <h4 class="bold">{{ medecin.user.get_full_name }}</h4>
+                                                        <h5>{{ medecin.specialite }}</h5>
+                                                        <div class="doc-rating">
+                                                            <i class="fa fa-star"></i>
+                                                            <i class="fa fa-star"></i>
+                                                            <i class="fa fa-star"></i>
+                                                            <i class="fa fa-star"></i>
+                                                            <i class="fa fa-star"></i>
+                                                            <span>4.8</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                        </div>
+                                        <div class="row">
+                                            <div class="patients-info relative" >
+                                                <div class="col-sm-4 col-xs-12 no-padding-right">
+                                                    <div class="patient-card has-shadow2">
+                                                        <div class="doc-info-wrap">
+                                                            <div class="patient-info">
+                                                                <h5 class="bold">1202</h5>
+                                                                <h6>Patient</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4 col-xs-12 pl-7 pr-7">
+                                                    <div class="patient-card has-shadow2">
+                                                        <div class="doc-info-wrap">
+                                                            <div class="patient-info">
+                                                                <h5 class="bold">29 yrs</h5>
+                                                                <h6>Doc age</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-4 col-xs-12 no-padding-left">
+                                                    <div class="patient-card has-shadow2">
+                                                        <div class="doc-info-wrap">
+                                                            <div class="patient-info">
+                                                                <h5 class="bold">{{ medecin.hopital.nom }}</h5>
+                                                                <h6>Hopital</h6>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                        </div><!-- end row -->
+                                        
+                                        <div class="col-xs-12 mb-30">
+                                            <div class= "pull-right">
+                                                <a href="{% url 'envoyer_identifiants' medecin.id %}" class="btn btn-sm btn-primary">Envoyer les identifiants</a>
+                                            </div>
+                                            <div class= "pull-left">
+                                                <a href="{% url 'assign_patients' medecin.id %}" class="btn btn-sm btn-success">Assigner des patients</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                {% else %}
+                    <div class="col-xs-12">
+                        <section class="box ">
+                            <div class="content-body p text-center" style="padding: 80px 20px;">
+                                <h3>{{ empty_message|default:"Aucun médecin associé à cet hôpital pour le moment." }}</h3>
+                            </div>
+                        </section>
+                    </div>
+                {% endif %}
+            </div>
+    </section>
+{% endblock %}

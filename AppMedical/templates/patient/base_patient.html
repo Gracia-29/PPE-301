@@ -1,0 +1,484 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+
+<!-- Mirrored from medash.netlify.app/html/ui-navbars by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 25 Mar 2025 12:29:52 GMT -->
+<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
+<head>
+    
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Multipurpose Dashboard</title>
+    <meta content="" name="description" />
+    <meta content="" name="author" />
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="{% static 'assets/images/favicon.png' %}" type="image/x-icon" />
+    <!-- For iPhone -->
+    <link rel="apple-touch-icon-precomposed" href="{% static 'assets/images/apple-touch-icon-57-precomposed.png' %}">
+    <!-- For iPhone 4 Retina display -->
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{% static 'assets/images/apple-touch-icon-114-precomposed.png' %}">
+    <!-- For iPad -->
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{% static 'assets/images/apple-touch-icon-72-precomposed.png' %}">
+    <!-- For iPad Retina display -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{% static 'assets/images/apple-touch-icon-144-precomposed.png' %}">
+
+    <!-- CORE CSS FRAMEWORK - START -->
+    <link href="{% static 'assets/plugins/pace/pace-theme-flash.css' %}" rel="stylesheet" type="text/css" media="screen" />
+    <link href="{% static 'assets/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'assets/plugins/bootstrap/css/bootstrap-theme.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'assets1/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'assets/css/animate.min.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'assets/plugins/perfect-scrollbar/perfect-scrollbar.css' %}" rel="stylesheet" type="text/css" />
+    <!-- CORE CSS FRAMEWORK - END -->
+
+    <!-- HEADER SCRIPTS INCLUDED ON THIS PAGE - START -->
+
+    <!-- HEADER SCRIPTS INCLUDED ON THIS PAGE - END -->
+
+    <!-- CORE CSS TEMPLATE - START -->
+    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'assets/css/responsive.css' %}" rel="stylesheet" type="text/css" />
+    <!-- CORE CSS TEMPLATE - END -->
+
+</head>
+<!-- END HEAD -->
+
+<!-- BEGIN BODY -->
+
+<body class=" ">
+    <!-- START TOPBAR -->
+    <div class='page-topbar gradient-blue1'>
+        <div class='logo-area crypto'>
+
+        </div>
+        <div class='quick-area'>
+            <div class='pull-left'>
+                <ul class="info-menu left-links list-inline list-unstyled">
+                    <li class="sidebar-toggle-wrap">
+                        <a href="#" data-toggle="sidebar" class="sidebar_toggle">
+                            <i class="fa fa-bars"></i>
+                        </a>
+                    </li>
+                    <li class="topnav-item item1">
+                        <a href="#" class="new-link w-text">Schedule
+                          <span class="badge badge-primary ml-5">New</span>
+                        </a>
+                    </li>
+                    <li class="topnav-item active item2">
+                        <a href="#" class="nav-link w-text">
+                          <i class="fa fa-area-chart mr-10"></i>Reports
+                        </a>
+                    </li>
+                    <li class="topnav-item item3">
+                        <a href="#" class="nav-link w-text">
+                          <i class="fa fa-sitemap mr-10"></i>Trading
+                        </a>
+                    </li>
+                
+                    
+                    <li class="hidden-sm hidden-xs searchform">
+                        <form action="#" method="post">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                <i class="fa fa-search"></i>
+                            </span>
+                                <input type="text" class="form-control animated fadeIn" placeholder="Search & Enter">
+                            </div>
+                            <input type='submit' value="">
+                        </form>
+                    </li>
+                </ul>
+            </div>
+            <div class='pull-right'>
+                <ul class="info-menu right-links list-inline list-unstyled">
+                    <li class="notify-toggle-wrapper spec">
+                        <a href="#" data-toggle="dropdown" class="toggle">
+                            <i class="fa fa-bell"></i>
+                            <span class="badge badge-accent">3</span>
+                        </a>
+                        <ul class="dropdown-menu notifications animated fadeIn">
+                            <li class="total">
+                                <span class="small">
+                                You have <strong>3</strong> new notifications.
+                                <a href="javascript:;" class="pull-right">Mark all as Read</a>
+                            </span>
+                            </li>
+                            <li class="list">
+
+                                <ul class="dropdown-menu-list list-unstyled ps-scrollbar">
+                                    <li class="unread available">
+                                        <!-- available: success, warning, info, error -->
+                                        <a href="javascript:;">
+                                            <div class="notice-icon">
+                                                <i class="fa fa-check"></i>
+                                            </div>
+                                            <div>
+                                                <span class="name">
+                                                    <strong>Successful Paid Invoice #1683</strong>
+                                                    <span class="time small">15 mins ago</span>
+                                                </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class="unread away">
+                                        <!-- available: success, warning, info, error -->
+                                        <a href="javascript:;">
+                                            <div class="notice-icon">
+                                                <i class="fa fa-clock-o"></i>
+                                            </div>
+                                            <div>
+                                                <span class="name">
+                                                    <strong>Confirmed Dr Jack Welly visit</strong>
+                                                    <span class="time small">45 mins ago</span>
+                                                </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class=" busy">
+                                        <!-- available: success, warning, info, error -->
+                                        <a href="javascript:;">
+                                            <div class="notice-icon">
+                                                <i class="fa fa-times"></i>
+                                            </div>
+                                            <div>
+                                                <span class="name">
+                                                    <strong>Cancel Appointment at 1:00PM</strong>
+                                                    <span class="time small">1 hour ago</span>
+                                                </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                   
+                                    <li class=" available">
+                                        <!-- available: success, warning, info, error -->
+                                        <a href="javascript:;">
+                                            <div class="notice-icon">
+                                                <i class="fa fa-check"></i>
+                                            </div>
+                                            <div>
+                                                <span class="name">
+                                                    <strong>Great Speed Notify of 1.34 LTC</strong>
+                                                    <span class="time small">14th Mar</span>
+                                                </span>
+                                            </div>
+                                        </a>
+                                    </li>
+
+                                </ul>
+
+                            </li>
+
+                            <li class="external">
+                                <a href="javascript:;">
+                                    <span>Read All Notifications</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="message-toggle-wrapper spec">
+                        <a href="#" data-toggle="dropdown" class="toggle mr-15">
+                            <i class="fa fa-envelope"></i>
+                            <span class="badge badge-accent">7</span>
+                        </a>
+                        <ul class="dropdown-menu messages animated fadeIn">
+
+                            <li class="list">
+
+                                <ul class="dropdown-menu-list list-unstyled ps-scrollbar">
+                                    <li class="unread status-available">
+                                        <a href="javascript:;">
+                                            <div class="user-img">
+                                                <img src="{% static 'data/profile/avatar-1.png' %}" alt="user-image" class="img-circle img-inline">
+                                            </div>
+                                            <div>
+                                                <span class="name">
+                                                    <strong>Clarine Vassar</strong>
+                                                    <span class="time small">- 15 mins ago</span>
+                                                <span class="profile-status available pull-right"></span>
+                                                </span>
+                                                <span class="desc small">
+                                                    Lorem ipsum dolor sit elit fugiat molest.
+                                                </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class=" status-away">
+                                        <a href="javascript:;">
+                                            <div class="user-img">
+                                                <img src="{% static 'data/profile/avatar-2.png' %}" alt="user-image" class="img-circle img-inline">
+                                            </div>
+                                            <div>
+                                                <span class="name">
+                                                    <strong>Brooks Latshaw</strong>
+                                                    <span class="time small">- 45 mins ago</span>
+                                                <span class="profile-status away pull-right"></span>
+                                                </span>
+                                                <span class="desc small">
+                                                    Lorem ipsum dolor sit elit fugiat molest.
+                                                </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class=" status-busy">
+                                        <a href="javascript:;">
+                                            <div class="user-img">
+                                                <img src="{% static 'data/profile/avatar-3.png' %}" alt="user-image" class="img-circle img-inline">
+                                            </div>
+                                            <div>
+                                                <span class="name">
+                                                    <strong>Clementina Brodeur</strong>
+                                                    <span class="time small">- 1 hour ago</span>
+                                                <span class="profile-status busy pull-right"></span>
+                                                </span>
+                                                <span class="desc small">
+                                                    Lorem ipsum dolor sit elit fugiat molest.
+                                                </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class=" status-offline">
+                                        <a href="javascript:;">
+                                            <div class="user-img">
+                                                <img src="{% static 'data/profile/avatar-4.png' %}" alt="user-image" class="img-circle img-inline">
+                                            </div>
+                                            <div>
+                                                <span class="name">
+                                                    <strong>Carri Busey</strong>
+                                                    <span class="time small">- 5 hours ago</span>
+                                                <span class="profile-status offline pull-right"></span>
+                                                </span>
+                                                <span class="desc small">
+                                                    Lorem ipsum dolor sit elit fugiat molest.
+                                                </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class=" status-offline">
+                                        <a href="javascript:;">
+                                            <div class="user-img">
+                                                <img src="{% static 'data/profile/avatar-5.png' %}" alt="user-image" class="img-circle img-inline">
+                                            </div>
+                                            <div>
+                                                <span class="name">
+                                                    <strong>Melissa Dock</strong>
+                                                    <span class="time small">- Yesterday</span>
+                                                <span class="profile-status offline pull-right"></span>
+                                                </span>
+                                                <span class="desc small">
+                                                    Lorem ipsum dolor sit elit fugiat molest.
+                                                </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class=" status-available">
+                                        <a href="javascript:;">
+                                            <div class="user-img">
+                                                <img src="{% static 'data/profile/avatar-1.png' %}" alt="user-image" class="img-circle img-inline">
+                                            </div>
+                                            <div>
+                                                <span class="name">
+                                                    <strong>Verdell Rea</strong>
+                                                    <span class="time small">- 14th Mar</span>
+                                                <span class="profile-status available pull-right"></span>
+                                                </span>
+                                                <span class="desc small">
+                                                    Lorem ipsum dolor sit elit fugiat molest.
+                                                </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class=" status-busy">
+                                        <a href="javascript:;">
+                                            <div class="user-img">
+                                                <img src="{% static 'data/profile/avatar-2.png' %}" alt="user-image" class="img-circle img-inline">
+                                            </div>
+                                            <div>
+                                                <span class="name">
+                                                    <strong>Linette Lheureux</strong>
+                                                    <span class="time small">- 16th Mar</span>
+                                                <span class="profile-status busy pull-right"></span>
+                                                </span>
+                                                <span class="desc small">
+                                                    Lorem ipsum dolor sit elit fugiat molest.
+                                                </span>
+                                            </div>
+                                        </a>
+                                    </li>
+                                    <li class=" status-away">
+                                        <a href="javascript:;">
+                                            <div class="user-img">
+                                                <img src="{% static 'data/profile/avatar-3.png' %}" alt="user-image" class="img-circle img-inline">
+                                            </div>
+                                            <div>
+                                                <span class="name">
+                                                    <strong>Araceli Boatright</strong>
+                                                    <span class="time small">- 16th Mar</span>
+                                                <span class="profile-status away pull-right"></span>
+                                                </span>
+                                                <span class="desc small">
+                                                    Lorem ipsum dolor sit elit fugiat molest.
+                                                </span>
+                                            </div>
+                                        </a>
+                                    </li>
+
+                                </ul>
+
+                            </li>
+
+                            <li class="external">
+                                <a href="javascript:;">
+                                    <span>Read All Messages</span>
+                                </a>
+                            </li>
+                        </ul>
+
+                    </li>
+                    <li class="profile">
+                        <a href="#" data-toggle="dropdown" class="toggle">
+                            <img src="{% if request.user.photo %}{{ request.user.photo.url }}{% else %}{% static 'data/profile/avatar-1.png' %}{% endif %}" alt="user-image" class="img-circle img-inline">
+                            <span> {{ request.user.first_name }} {{ request.user.last_name }} <i class="fa fa-angle-down"></i></span>
+                        </a>
+                        <ul class="dropdown-menu profile animated fadeIn">
+                            <li>
+                                <a href='hos-faq.html'>
+                                    <i class="fa fa-wrench"></i> Settings
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{% url 'profil_patient'%}">
+                                    <i class="fa fa-user"></i> Profile
+                                </a>
+                            </li>
+                            <li>
+                                <a href='hos-support.html'>
+                                    <i class="fa fa-info"></i> Help
+                                </a>
+                            </li>
+                            <li class="last">
+                                <a href="{% url 'deconnexion' %}">
+                                    <i class="fa fa-lock"></i> Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+    <!-- END TOPBAR -->
+    <!-- START CONTAINER -->
+    <div class="page-container row-fluid container-fluid">
+
+        <!-- SIDEBAR - START -->
+
+        <div class="page-sidebar fixedscroll">
+
+            <!-- MAIN MENU - START -->
+            <div class="page-sidebar-wrapper" id="main-menu-wrapper">
+
+                <ul class='wraplist'>
+                    <li class='menusection'>Main</li>
+                    <li class="">
+                        <a href="{% url 'dashboard_patient' request.user.id %}">
+                            <i class="img">
+                                <img src="{% static 'data/hos-dash/icons/3.png' %}" alt="" class="width-20">
+                            </i>
+                            <span class="title">Dashboard Patient</span>
+                        </a>
+                    </li>
+
+                    <li class="">
+                        <a href="{% url 'voir_dossier_medical' request.user.id %}">
+                            <i class="img">
+                                <img src="{% static 'data/hos-dash/icons/3.png' %}" alt="" class="width-20">
+                            </i>
+                            <span class="title">Dossier Medical</span>
+                        </a>
+                    </li>
+
+                    <li class="">
+                        <a href="{% url 'mes_ordonnances' %}">
+                            <i class="img">
+                                <img src="{% static 'data/hos-dash/icons/3.png' %}" alt="" class="width-20">
+                            </i>
+                            <span class="title">Ordonnances</span>
+                        </a>
+                    </li>
+
+                    <li class="">
+                        <a href="javascript:;">
+                            <i class="img">
+                                <img src="{% static 'data/hos-dash/icons/6.png' %}" alt="" class="width-20">
+                            </i>
+                            <span class="title">Rendez-vous</span>
+                            <span class="arrow "></span>
+                        </a>
+                        <ul class="sub-menu">
+                            <li>
+                                <a class href="{% url 'liste_rendez_vous' %}">Mes Rendez-vous</a>
+                            </li>
+                            <li>
+                                <a class href="{% url 'prendre_rendez_vous' %}">Prendre Rendez-vous</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="">
+                        <a href="{% url 'personnes_a_prevenir' %}">
+                            <i class="img">
+                                <img src="{% static 'data/hos-dash/icons/2.png' %}" alt="" class="width-20">
+                            </i>
+                            <span class="title">Personne à prévenir</span>
+                        </a>
+                    </li>
+
+                    <li class="">
+                        <a href="{% url 'liste_hopitaux' %}">
+                            <i class="img">
+                                <img src="{% static 'data/hos-dash/icons/3.png' %}" alt="" class="width-20">
+                            </i>
+                            <span class="title">Liste des hopitaux</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!-- MAIN MENU - END -->
+
+        </div>
+ <!--  SIDEBAR - END -->
+
+ <main>
+      {% block content %}
+
+      {% endblock %}
+ </main>
+
+
+  <!-- CORE JS FRAMEWORK - START -->
+    <script src="{% static 'assets/js/jquery.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery.easing.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/pace/pace.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js' %}"></script>
+    <script src="{% static 'assets/plugins/viewport/viewportchecker.js' %}"></script>
+    <script>
+        window.jQuery || document.write('<script src="{% static 'assets/js/jquery.min.js' %}"><\/script>');
+    </script>
+    <!-- CORE JS FRAMEWORK - END -->
+
+    <!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - START -->
+    <!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - END -->
+
+    <!-- CORE TEMPLATE JS - START -->
+    <script src="{% static 'assets/js/scripts.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+    <!-- END CORE TEMPLATE JS - END -->
+
+</body>
+
+
+<!-- Mirrored from medash.netlify.app/html/ui-navbars by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 25 Mar 2025 12:29:52 GMT -->

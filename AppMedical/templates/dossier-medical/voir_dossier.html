@@ -1,0 +1,84 @@
+{% extends base_template %}
+
+{% block content %}
+<section id="main-content" class=" ">
+<div class="container mt-4">
+    <h2 class="mb-4 text-primary">
+        📁 Dossier médical de {{ dossier.patient.get_full_name }}
+    </h2>
+<div class="row">
+    <div class="col-md-6 col-sm-12">
+        <section class="box gradient-blue" style="padding:20px">
+            <div class="patient-personal mb-0">
+                <h4 class="w-text">Groupe Sanguin :</h4>
+                <p class="mb-0 g-text">{{ dossier.groupe_sanguin|default:"Non précisé" }}</p>
+            </div>
+            <div class="patient-personal mb-0">
+                <h4 class="w-text">Allergies :</h4>
+                <p class="mb-0 g-text">{{ dossier.allergies|default:"Aucun" }}</p>
+            </div>
+            <div class="patient-personal mb-0">
+                <h4 class="w-text">Antécédants médicaux :</h4>
+                <p class="mb-0 g-text">{{ dossier.antecedents|default:"Aucun" }}</p>
+            </div>
+            <div class="patient-personal mb-0">
+                <h4 class="w-text">Informations complementaire :</h4>
+                <p class="mb-0 g-text">1</strong> {{ dossier.infos_complementaires|default:"Non renseigné" }}</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Historique des suivis médicaux -->
+    <div class="card shadow p-4">
+        <h4 class="text-secondary">📋 Historique des suivis médicaux</h4>
+
+        {% if suivis %}
+            {% for suivi in suivis %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <p class="mb-1"><strong>Date :</strong> {{ suivi.date_consultation|date:"d/m/Y H:i" }}</p>
+                        <p><strong>Poids :</strong> {{ suivi.poids|default:"-" }} kg</p>
+                        <p><strong>Taille :</strong> {{ suivi.taille|default:"-" }} cm</p>
+                        <p><strong>Tension :</strong> {{ suivi.tension_arterielle|default:"-" }}</p>
+                        <p><strong>Température :</strong> {{ suivi.temperature|default:"-" }} °C</p>
+                        <p><strong>Observations :</strong> {{ suivi.observations|default:"Non renseigné" }}</p>
+                        <p><strong>Examens :</strong> {{ suivi.examens|default:"Aucun" }}</p>
+                        <p><strong>Traitements :</strong> {{ suivi.traitements|default:"Aucun" }}</p>
+                        <p><strong>Prescriptions :</strong> {{ suivi.prescriptions|default:"Aucune" }}</p>
+
+                        {% if suivi.fichiers.all %}
+                            <ul>
+                                {% for f in suivi.fichiers.all %}
+                                    <li>
+                                        <a href="{{ f.fichiers.url }}" target="_blank">Fichiers joint📄 {{ f.fichiers.name }}</a>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <p class="text-muted">Aucun fichier joint</p>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted">Aucun suivi médical enregistré.</p>
+        {% endif %}
+    </div>
+
+    <!-- Boutons -->
+    <div class="mt-4">
+        {% if peut_modifier %}
+            <a href="{% url 'modifier_dossier_medical' dossier.patient.id %}" class="btn btn-warning me-2">
+                ✏ Modifier le dossier
+            </a>
+        {% endif %}
+        {% if request.user.role != 'patient' %}
+        <a href="{% url 'ajouter_suivi_medical' dossier.patient.id %}" class="btn btn-success">
+            ➕ Ajouter suivi médical
+        </a>
+        {% endif %}
+
+    </div>
+</div>
+</section>
+{% endblock %}

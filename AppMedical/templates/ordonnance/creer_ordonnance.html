@@ -1,0 +1,68 @@
+{% extends "medecin/base_medecin.html" %}
+{% block content %}
+<h2>Nouvelle ordonnance pour {{ patient.get_full_name }}</h2>
+
+<form method="post">
+  {% csrf_token %}
+  
+  <fieldset class="mb-3">
+    <legend>Observations</legend>
+    {{ ordonnance_form.observations }}
+  </fieldset>
+
+  <fieldset>
+    <legend>Médicaments prescrits</legend>
+    {{ formset.management_form }}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Nom</th><th>Dosage</th><th>Fréquence</th><th>Durée</th><th>Supprimer</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for form in formset.forms %}
+          <tr>
+            <td>{{ form.nom }}</td>
+            <td>{{ form.dosage }}</td>
+            <td>{{ form.frequence }}</td>
+            <td>{{ form.duree }}</td>
+            <td>{{ form.DELETE }}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <button type="button" id="add-med-btn" class="btn btn-secondary">Ajouter un médicament</button>
+  </fieldset>
+
+  <button type="submit" class="btn btn-primary mt-3">Enregistrer l'ordonnance</button>
+</form>
+
+<script>
+// Code JS simple pour ajouter dynamiquement un formulaire dans le formset
+const addBtn = document.getElementById('add-med-btn');
+const formsetPrefix = '{{ formset.prefix }}';
+addBtn.addEventListener('click', () => {
+    const totalForms = document.querySelector(`#id_${formsetPrefix}-TOTAL_FORMS`);
+    const currentCount = parseInt(totalForms.value);
+    const emptyForm = document.querySelector('.empty-form').innerHTML.replace(/__prefix__/g, currentCount);
+    totalForms.value = currentCount + 1;
+    const tbody = document.querySelector('table tbody');
+    const newRow = document.createElement('tr');
+    newRow.innerHTML = emptyForm;
+    tbody.appendChild(newRow);
+});
+</script>
+
+<!-- Hidden empty form template for JS -->
+<table style="display:none;">
+  <tbody class="empty-form">
+    <tr>
+      {% for field in formset.empty_form %}
+        <td>{{ field }}</td>
+      {% endfor %}
+    </tr>
+  </tbody>
+</table>
+
+{% endblock %}

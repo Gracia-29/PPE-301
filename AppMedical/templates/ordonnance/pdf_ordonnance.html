@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ordonnance PDF</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; }
+    h1 { color: #007bff; }
+    .section { margin-bottom: 20px; }
+    .bold { font-weight: bold; }
+
+    /* Style zone signature */
+    .signature-section {
+      margin-top: 60px;
+      border-top: 1px solid #000;
+      padding-top: 20px;
+      width: 300px;
+    }
+    .signature-line {
+      border-bottom: 1px solid #000;
+      width: 100%;
+      height: 2em;
+      margin-bottom: 5px;
+    }
+    .signature-text {
+      font-style: italic;
+      font-size: 0.9em;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <h1>Ordonnance médicale</h1>
+  <div class="section">
+    <p><span class="bold">Patient :</span> {{ ordonnance.patient.get_full_name }}</p>
+    <p><span class="bold">Médecin :</span> Dr. {{ ordonnance.medecin.user.get_full_name }}</p>
+    <p><span class="bold">Date :</span> {{ ordonnance.date|date:"d/m/Y" }}</p>
+  </div>
+
+  <div class="section">
+    <h2>Observations</h2>
+    <p>{{ ordonnance.observations }}</p>
+  </div>
+
+  <div class="section">
+    <h2>Médicaments prescrits</h2>
+    <ul>
+      {% for medicament in ordonnance.medicaments.all %}
+      <li>{{ medicament.nom }} - {{ medicament.posologie }}</li>
+      {% empty %}
+      <li>Aucun médicament prescrit.</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <!-- Zone signature -->
+  <div class="signature-section">
+    <div class="signature-line"></div>
+    <p class="signature-text">Signature du médecin</p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,80 @@
+{% extends "admin/base_admin.html" %}
+{% block content %}
+
+<section id="main-content" class=" ">
+            <div class="wrapper main-wrapper row" style=''>
+                <div class='col-xs-12'>
+                    <div class="page-title">
+
+                        <div class="pull-left">
+                            <!-- PAGE HEADING TAG - START -->
+                            <h1 class="title">Ajouter Personne à prévenir</h1>
+                            <!-- PAGE HEADING TAG - END -->
+                        </div>
+
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-lg-6">
+                        <section class="box ">
+                            <header class="panel_header">
+                                <div class="actions panel_actions pull-right">
+                                    <a class="box_toggle fa fa-chevron-down"></a>
+                                    <a class="box_setting fa fa-cog" data-toggle="modal" href="#section-settings"></a>
+                                    <a class="box_close fa fa-times"></a>
+                                </div>
+                            </header>
+                            <div class="content-body">
+
+                                <form method="post">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-xs-12">
+
+                                            <div class="form-group">
+                                                <label class="form-label">Nom</label>
+                                                <div class="controls">
+                                                    {{ form.nom }}
+                                                </div>
+                                                {{ form.nom.errors }}
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="form-label">Relation</label>
+                                                <div class="controls">
+                                                    {{ form.relation }}
+                                                </div>
+                                                {{ form.relation.errors }}
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="form-label">Email</label>
+                                                <div class="controls">
+                                                    {{ form.email }}
+                                                </div>
+                                                {{ form.email.errors }}
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label class="form-label">Telephone</label>
+                                                <div class="controls">
+                                                    {{ form.telephone }}
+                                                </div>
+                                                {{ form.telephone.errors }}
+                                            </div>
+
+                                            <div class="pull-right">
+                                                <button type="submit" class="btn btn-primary">Save</button>
+                                                <button type="button" class="btn">Cancel</button>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </section>
+                    </div>
+            </div>
+        </section>
+
+{% endblock %}

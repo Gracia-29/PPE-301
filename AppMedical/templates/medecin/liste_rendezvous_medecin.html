@@ -1,0 +1,30 @@
+{% extends "medecin/base_medecin.html" %}  {# ou ton template de base #}
+
+{% block content %}
+<h2>Rendez-vous de Dr {{ medecin.user.get_full_name }}</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Patient</th>
+            <th>Date</th>
+            <th>Heure</th>
+            <th>Motif</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for rdv in rendez_vous %}
+        <tr>
+            <td>{{ rdv.patient.get_full_name }}</td>
+            <td>{{ rdv.date }}</td>
+            <td>{{ rdv.heure }}</td>
+            <td>{{ rdv.motif }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">Aucun rendez-vous validé pour le moment.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

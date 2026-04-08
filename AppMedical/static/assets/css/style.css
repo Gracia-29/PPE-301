@@ -8937,7 +8937,7 @@ ul.info p {
     left: 0;
     width: 100%;
     height: 100%;
-    background: url(../../data/res-dash/pattern2.html);
+    background: url(../../data/res-dash/pattern2.png);
     opacity: .1
 }
 
@@ -9166,7 +9166,7 @@ ul.info p {
 .dotted-wrapper{
     position: relative;
     display: inline-block;
-    background: url(../../data/crypto-dash/dotted-bg.html) no-repeat;
+    background: url(../../data/crypto-dash/dotted-bg.jpg) no-repeat;
     background-size: cover;
     padding: 60px 40px;
     overflow: hidden;

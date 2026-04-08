@@ -1,0 +1,29 @@
+{% extends "dashboard/base_admin.html" %}
+{% block content %}
+<h2>Rendez-vous validés</h2>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Patient</th>
+      <th>Médecin</th>
+      <th>Date</th>
+      <th>Heure</th>
+      <th>Motif</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for rdv in rendez_vous %}
+    <tr>
+      <td>{{ rdv.patient.get_full_name }}</td>
+      <td>Dr. {{ rdv.medecin.user.get_full_name }}</td>
+      <td>{{ rdv.date }}</td>
+      <td>{{ rdv.heure }}</td>
+      <td>{{ rdv.motif }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5">Aucun rendez-vous validé trouvé.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

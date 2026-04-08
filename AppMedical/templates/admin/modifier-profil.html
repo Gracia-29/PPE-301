@@ -1,0 +1,63 @@
+{% extends 'medecin/base_medecin.html'%}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+    <div class="card shadow p-4" style="max-width: 700px; width: 100%; border-top: 4px solid #6093f9ff;">
+        <h4 class="text-center mb-4">🩺 Modifier mon profil</h4>
+
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <!-- Informations personnelles -->
+            <h5 class="text-primary mb-3"><i class="fa fa-user"></i> Informations personnelles</h5>
+            <div class="row">
+                {% for field in form_user %}
+                <div class="col-md-6 mb-3">
+                    {{ field.label_tag }}
+                    {{ field|add_class:"form-control" }}
+                    {% if field.errors %}
+                        <div class="text-danger small">{{ field.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Informations professionnelles -->
+            <h5 class="text-success mt-4 mb-3"><i class="fa fa-user-md"></i> Informations professionnelles</h5>
+            <div class="row">
+                {% for field in form_medecin %}
+                <div class="col-md-12 mb-3">
+                    {{ field.label_tag }}
+                    {{ field|add_class:"form-control" }}
+                    {% if field.errors %}
+                        <div class="text-danger small">{{ field.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Changer mot de passe -->
+            <h5 class="text-danger mt-4 mb-3"><i class="fa fa-lock"></i> Changer le mot de passe</h5>
+            <div class="row">
+                {% for field in form_password %}
+                <div class="col-md-6 mb-3">
+                    {{ field.label_tag }}
+                    {{ field|add_class:"form-control" }}
+                    {% if field.errors %}
+                        <div class="text-danger small">{{ field.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-success px-4">
+                    <i class="fa fa-save"></i> Enregistrer les modifications
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

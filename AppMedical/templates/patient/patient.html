@@ -1,0 +1,530 @@
+{% extends 'patient/base_patient.html' %}
+{% block content %}
+{% load static %}
+<section id="main-content" class=" ">
+            <div class="wrapper main-wrapper row" style=''>
+
+                <div class='col-xs-12'>
+                    <div class="page-title">
+
+                        <div class="pull-left">
+                            <!-- PAGE HEADING TAG - START -->
+                            <h1 class="title">Patient Profile</h1>
+                            <!-- PAGE HEADING TAG - END -->
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+                <!-- MAIN CONTENT AREA STARTS -->
+
+                <div class="col-lg-4">
+                    <section class="box ">
+                        <div class="content-body p">
+                            <div class="row">
+                                <div class="doctors-list patient relative">
+                                    <div class="doctors-head relative text-center">
+                                        <div class="patient-img img-circle">
+                                            <img src="{% static 'data/profile/profile.jpg' %}" class="rad-50 center-block" alt="">
+                                            <div class="stutas"></div>
+                                        </div>
+                                        <h3 class="header w-text relative bold">Name : {{ request.user.first_name }} {{ request.user.last_name }}</h3>
+                                        <p class="desc g-text relative">Lorem ipsum dolor sit amet, Earum nes ciunt fugiat enim. Sequi quos labore.</p>
+                                    </div>
+                                    <div class="row">
+                                        <div class="patients-info relative" >
+                                            <div class="col-sm-6 col-xs-12">
+                                                <div class="patient-card has-shadow2">
+                                                    <div class="doc-info-wrap">
+                                                        <div class="patient-info">
+                                                            <h5 class="bold">{{ request.user.genre }}</h5>
+                                                            <h6>Patient  Gender</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-xs-12">
+                                                <div class="patient-card has-shadow2">
+                                                    <div class="doc-info-wrap">
+                                                        <div class="patient-info">
+                                                            <h5 class="bold">{{ request.user.date_naissance }}</h5>
+                                                            <h6>Date de naissance</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-xs-12">
+                                                <div class="patient-card has-shadow2">
+                                                    <div class="doc-info-wrap">
+                                                        <div class="patient-info">
+                                                            <h5 class="bold">176 cm</h5>
+                                                            <h6>Patient  Height</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6 col-xs-12">
+                                                <div class="patient-card has-shadow2">
+                                                    <div class="doc-info-wrap">
+                                                        <div class="patient-info">
+                                                            <h5 class="bold"> 67 Kg</h5>
+                                                            <h6>Patient Weight</h6>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div><!-- end row -->
+                                    
+                                    <div class="col-xs-12 mb-30">
+                                        <div class="reminder-wrapper has-shadow2">
+                                           <div class="reminder-icon">
+                                               <img src="{% static 'data/hos-dash/clock.png' %}" width="60" alt="">
+                                           </div>
+                                           <div class="reminder-content">
+                                               <h4 class="w-text bold">Reminder Alarm</h4>
+                                               <h5 class="g-text">ask about medicine</h5>
+                                           </div>
+                                        </div>
+                                    </div>
+                                    
+
+                                </div>
+                               
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="col-lg-8 col-md-12">
+                    <div class="row">
+                        <div class="col-xs-12 col-md-7">
+                            <section class="box ">
+                                <header class="panel_header">
+                                    <h2 class="title pull-left">Blood Levels</h2>
+                                    <div class="actions panel_actions pull-right">
+                                        <a class="box_toggle fa fa-chevron-down"></a>
+                                        <a class="box_setting fa fa-cog" data-toggle="modal" href="#section-settings"></a>
+                                        <a class="box_close fa fa-times"></a>
+                                    </div>
+                                </header>
+                                <div class="content-body">    
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <div class=""><canvas id="bar-chartjs" height="450" width="600"></canvas></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+
+                        <div class="col-xs-12 col-md-5">
+                            
+                            <section class="box ">
+                                <header class="panel_header">
+                                    <h2 class="title pull-left">Notifications</h2>
+                                    <div class="actions panel_actions pull-right">
+                                        <a class="box_toggle fa fa-chevron-down"></a>
+                                        <a class="box_setting fa fa-cog" data-toggle="modal" href="#section-settings"></a>
+                                        <a class="box_close fa fa-times"></a>
+                                    </div>
+                                </header>
+                                <div class="content-body">    
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <ul class="project-activity list-unstyled mb-0">
+                                                <li class="activity-list warning">
+                                                    <div class="detail-info">
+                                                        <div class="visit-doc">
+                                                            <small class="text-muted">
+                                                                You comfirm Dr sultads visit 
+                                                            </small>
+                                                            <p class="message">
+                                                                27 July - 05:34
+                                                            </p>
+                                                            
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="clearfix"></li>
+                                                <li class="activity-list info">
+                                                    <div class="detail-info">
+                                                        <div class="visit-doc">
+                                                            <small class="text-muted">
+                                                                Reminder : Treatment Time!
+                                                            </small>
+                                                            <p class="message">
+                                                                25 july - 20:00
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="activity-list success">
+                                                    <div class="detail-info">
+                                                        <div class="visit-doc">
+                                                            <small class="text-muted">
+                                                                You completed Dr Joun visit 
+                                                            </small>
+                                                            <p class="message">
+                                                                26 Feb - 23:47
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="activity-list warning">
+                                                    <div class="detail-info">
+                                                        <div class="visit-doc">
+                                                            <small class="text-muted">
+                                                                Your Blood check is good!
+                                                            </small>
+                                                            <p class="message">
+                                                                23 Jan - 21:45
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                                <li class="activity-list danger">
+                                                    <div class="detail-info pb0">
+                                                        <div class="visit-doc">
+                                                            <small class="text-muted">
+                                                                You Cancelled Dr Wall Smith visit
+                                                            </small>
+                                                            <p class="message">
+                                                                17 Nov - 12:23
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </li>
+
+                                            </ul>
+                                        </div>      
+                                    </div> <!-- End .row -->
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <section class="box gradient-blue" style="padding:20px">
+                                <div class="patient-personal mb-0">
+                                    <h4 class="w-text">Blood type :</h4>
+                                    <p class="mb-0 g-text">AB+</p>
+                                </div>
+                                <div class="patient-personal mb-0">
+                                    <h4 class="w-text">Allergies :</h4>
+                                    <p class="mb-0 g-text">Penicilin, peanuts</p>
+                                </div>
+                                <div class="patient-personal mb-0">
+                                    <h4 class="w-text">Diseases :</h4>
+                                    <p class="mb-0 g-text">Diabetes</p>
+                                </div>
+                                <div class="patient-personal mb-0">
+                                    <h4 class="w-text">Pressure :</h4>
+                                    <p class="mb-0 g-text">130/80 mmHG</p>
+                                </div>
+                                <div class="patient-personal mb-0">
+                                    <h4 class="w-text">Temperture :</h4>
+                                    <p class="mb-0 g-text">36.8 Degree</p>
+                                </div>
+                            </section>
+                        </div>
+                        <div class="col-md-6 col-sm-12">
+                            <section class="box gradient-pink" style="padding:20px">
+                                <div class="patient-personal v2 mb-0">
+                                    <h4 class="w-text"> <span class="text-info bold">-- </span> Regular checkups</h4>
+                                    <p class="mb-0 g-text"></p>
+                                </div>
+                                <div class="patient-personal v2 mb-0">
+                                    <h4 class="w-text">Dr Anthony Wager</h4>
+                                    <p class="mb-0 g-text">dermatologist</p>
+                                </div>
+                                <div class="patient-personal v2 mb-0">
+                                    <h4 class="w-text">Dr Smith Wright </h4>
+                                    <p class="mb-0 g-text">Clinical doctor</p>
+                                </div>
+                                <div class="patient-personal v2 mb-0">
+                                    <h4 class="w-text">Dr Tom Humpton</h4>
+                                    <p class="mb-0 g-text">Dentist</p>
+                                </div>
+                                <div class="patient-personal v2 mb-0">
+                                    <h4 class="w-text">Dr Riphat Jion</h4>
+                                    <p class="mb-0 g-text">Surgeon</p>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </div>
+                
+
+                <div class="clearfix"></div>
+
+                <div class="col-md-7 col-sm-12 col-xs-12">
+
+                    <div class="row mt-15">
+                        <div class="col-md-6 col-xs-12 ">
+                            <div class="r1_graph1 db_box db_box_large has-shadow2">
+                                <div class="pat-info-wrapper">
+                                    <div class="pat-info text-left">
+                                        <h5 class=''>Blood pressure</h5>
+                                        <h6>In the normal</h6>
+                                    </div>
+                                    <div class="pat-val relative">
+                                        <h4 class="value p-text">120/89 <span>mmHG</span></h4>
+                                    </div>
+                                </div>
+                                <span class="sparklinedash2">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-xs-12">
+                            <div class="r1_graph1 db_box db_box_large has-shadow2">
+                                <div class="pat-info-wrapper">
+                                    <div class="pat-info text-left">
+                                        <h5 class=''>Heart Rate</h5>
+                                        <h6 class="red-text">Above the normal</h6>
+                                    </div>
+                                    <div class="pat-val relative">
+                                        <h4 class="value red-text">107 <span>Per min</span></h4>
+                                    </div>
+                                </div>
+                                <span class="sparklinedash">Loading...</span>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 col-xs-12">
+                            <div class="r1_graph1 db_box db_box_large has-shadow2">
+                                <div class="pat-info-wrapper">
+                                    <div class="pat-info text-left">
+                                        <h5 class=''>Glucose Rate</h5>
+                                        <h6>In the normal</h6>
+                                    </div>
+                                    <div class="pat-val relative">
+                                        <h4 class="value green-text"><i class="complete fa fa-arrow-up"></i>97<span>mg/dl</span></h4>
+                                    </div>
+                                </div>
+                                <span class="sparkline8">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-xs-12">
+                            <div class="r1_graph1 db_box db_box_large has-shadow2">
+                                <div class="pat-info-wrapper">
+                                    <div class="pat-info text-left">
+                                        <h5 class=''>Clolesterol</h5>
+                                        <h6>In the normal</h6>
+                                    </div>
+                                    <div class="pat-val relative">
+                                        <h4 class="value blue-text"><i class="cancelled fa fa-arrow-down"></i>124<span>mg/dl</span></h4>
+                                    </div>
+                                </div>
+                                <span class="sparkline9">Loading...</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-md-5">
+                    <section class="box ">
+                        <header class="panel_header">
+                            <h2 class="title pull-left">Patient Activities</h2>
+                            <div class="actions panel_actions pull-right">
+                                <a class="box_toggle fa fa-chevron-down"></a>
+                                <a class="box_setting fa fa-cog" data-toggle="modal" href="#section-settings"></a>
+                                <a class="box_close fa fa-times"></a>
+                            </div>
+                        </header>
+                        <div class="content-body pb0">    
+                            <div class="row">
+                                <div class="col-md-10 col-sm-10 col-xs-10 col-md-offset-1 col-sm-offset-1 col-xs-offset-1">
+                                    <canvas id="radar-chartjs" width="300" height="300"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div> 
+
+            
+                <div class="clearfix"></div>
+
+                <!-- MAIN CONTENT AREA ENDS -->
+            </div>
+        </section>
+        <!-- END CONTENT -->
+        <div class="page-chatapi hideit">
+
+            <div class="search-bar">
+                <input type="text" placeholder="Search" class="form-control">
+            </div>
+
+            <div class="chat-wrapper">
+
+                <h4 class="group-head">Favourites</h4>
+                <ul class="contact-list">
+
+                    <li class="user-row " id='chat_user_1' data-user-id='1'>
+                        <div class="user-img">
+                            <a href="#"><img src="{% static 'data/profile/avatar-1.png' %}" alt=""></a>
+                        </div>
+                        <div class="user-info">
+                            <h4><a href="#">Joge Lucky</a></h4>
+                            <span class="status available" data-status="available"> Available</span>
+                        </div>
+                        <div class="user-status available">
+                            <i class="fa fa-circle"></i>
+                        </div>
+                    </li>
+                    <li class="user-row " id='chat_user_2' data-user-id='2'>
+                        <div class="user-img">
+                            <a href="#"><img src="{% static 'data/profile/avatar-2.png' %}" alt=""></a>
+                        </div>
+                        <div class="user-info">
+                            <h4><a href="#">Folisise Chosiel</a></h4>
+                            <span class="status away" data-status="away"> Away</span>
+                        </div>
+                        <div class="user-status away">
+                            <i class="fa fa-circle"></i>
+                        </div>
+                    </li>
+                    <li class="user-row " id='chat_user_3' data-user-id='3'>
+                        <div class="user-img">
+                            <a href="#"><img src="{% static 'data/profile/avatar-3.png' %}" alt=""></a>
+                        </div>
+                        <div class="user-info">
+                            <h4><a href="#">Aron Gonzalez</a></h4>
+                            <span class="status busy" data-status="busy"> Busy</span>
+                        </div>
+                        <div class="user-status busy">
+                            <i class="fa fa-circle"></i>
+                        </div>
+                    </li>
+
+                </ul>
+
+                <h4 class="group-head">More Contacts</h4>
+                <ul class="contact-list">
+
+                    <li class="user-row " id='chat_user_4' data-user-id='4'>
+                        <div class="user-img">
+                            <a href="#"><img src="{% static 'data/profile/avatar-4.png' %}" alt=""></a>
+                        </div>
+                        <div class="user-info">
+                            <h4><a href="#">Chris Fox</a></h4>
+                            <span class="status offline" data-status="offline"> Offline</span>
+                        </div>
+                        <div class="user-status offline">
+                            <i class="fa fa-circle"></i>
+                        </div>
+                    </li>
+                    <li class="user-row " id='chat_user_5' data-user-id='5'>
+                        <div class="user-img">
+                            <a href="#"><img src="{% static 'data/profile/avatar-5.png' %}" alt=""></a>
+                        </div>
+                        <div class="user-info">
+                            <h4><a href="#">Mogen Polish</a></h4>
+                            <span class="status offline" data-status="offline"> Offline</span>
+                        </div>
+                        <div class="user-status offline">
+                            <i class="fa fa-circle"></i>
+                        </div>
+                    </li>
+                    <li class="user-row " id='chat_user_6' data-user-id='6'>
+                        <div class="user-img">
+                            <a href="#"><img src="{% static 'data/profile/avatar-1.png' %}" alt=""></a>
+                        </div>
+                        <div class="user-info">
+                            <h4><a href="#">Smith Carter</a></h4>
+                            <span class="status available" data-status="available"> Available</span>
+                        </div>
+                        <div class="user-status available">
+                            <i class="fa fa-circle"></i>
+                        </div>
+                    </li>
+                    <li class="user-row " id='chat_user_7' data-user-id='7'>
+                        <div class="user-img">
+                            <a href="#"><img src="{% static 'data/profile/avatar-2.png' %}" alt=""></a>
+                        </div>
+                        <div class="user-info">
+                            <h4><a href="#">Amilia Gozenal</a></h4>
+                            <span class="status busy" data-status="busy"> Busy</span>
+                        </div>
+                        <div class="user-status busy">
+                            <i class="fa fa-circle"></i>
+                        </div>
+                    </li>
+                    <li class="user-row " id='chat_user_8' data-user-id='8'>
+                        <div class="user-img">
+                            <a href="#"><img src="{% static 'data/profile/avatar-3.png' %}" alt=""></a>
+                        </div>
+                        <div class="user-info">
+                            <h4><a href="#">Tahir Jemyship</a></h4>
+                            <span class="status away" data-status="away"> Away</span>
+                        </div>
+                        <div class="user-status away">
+                            <i class="fa fa-circle"></i>
+                        </div>
+                    </li>
+                    <li class="user-row " id='chat_user_9' data-user-id='9'>
+                        <div class="user-img">
+                            <a href="#"><img src="{% static 'data/profile/avatar-4.png' %}" alt=""></a>
+                        </div>
+                        <div class="user-info">
+                            <h4><a href="#">Johanson Wright</a></h4>
+                            <span class="status busy" data-status="busy"> Busy</span>
+                        </div>
+                        <div class="user-status busy">
+                            <i class="fa fa-circle"></i>
+                        </div>
+                    </li>
+                    <li class="user-row " id='chat_user_10' data-user-id='10'>
+                        <div class="user-img">
+                            <a href="#"><img src="{% static 'data/profile/avatar-5.png' %}" alt=""></a>
+                        </div>
+                        <div class="user-info">
+                            <h4><a href="#">Loni Tindall</a></h4>
+                            <span class="status away" data-status="away"> Away</span>
+                        </div>
+                        <div class="user-status away">
+                            <i class="fa fa-circle"></i>
+                        </div>
+                    </li>
+                    <li class="user-row " id='chat_user_11' data-user-id='11'>
+                        <div class="user-img">
+                            <a href="#"><img src="{% static 'data/profile/avatar-1.png' %}" alt=""></a>
+                        </div>
+                        <div class="user-info">
+                            <h4><a href="#">Natcho Herlaey</a></h4>
+                            <span class="status idle" data-status="idle"> Idle</span>
+                        </div>
+                        <div class="user-status idle">
+                            <i class="fa fa-circle"></i>
+                        </div>
+                    </li>
+                    <li class="user-row " id='chat_user_12' data-user-id='12'>
+                        <div class="user-img">
+                            <a href="#"><img src="{% static 'data/profile/avatar-2.png' %}" alt=""></a>
+                        </div>
+                        <div class="user-info">
+                            <h4><a href="#">Shakira Swedan</a></h4>
+                            <span class="status idle" data-status="idle"> Idle</span>
+                        </div>
+                        <div class="user-status idle">
+                            <i class="fa fa-circle"></i>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="chatapi-windows ">
+
+        </div>
+    </div>
+    {% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'assets/plugins/sparkline-chart/jquery.sparkline.min.js' %}"></script>
+<script src="{% static 'assets/js/chart-sparkline.js' %}"></script>
+{% endblock %}
+    <!-- END CONTAINER -->

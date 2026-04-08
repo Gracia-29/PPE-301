@@ -1,0 +1,21 @@
+{% extends 'patient/base_patient.html' %}
+{% block content %}
+<section id="main-content" class=" ">
+    <h1>Bienvenue sur la page des hôpitaux</h1>
+<div class="container mt-3">
+    <h2>Liste des hôpitaux</h2>
+    <ul class="list-group">
+    {% for hopital in hopitaux %}
+        <div class="card">
+            <h4>{{ hopital.nom }}</h4>
+            <p>{{ hopital.adresse }}</p>
+            <a href="{% url 'demande_inscription' hopital.id %}" class="btn btn-primary">
+                S’inscrire
+            </a>
+        </div>
+    {% endfor %}
+
+    </ul>
+</div>
+</section>
+{% endblock %}

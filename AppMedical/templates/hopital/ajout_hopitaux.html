@@ -1,0 +1,95 @@
+{% extends "admin/base_admin.html" %}
+{% block content %}
+<section id="main-content" class="">
+            <div class="wrapper main-wrapper row" style="">
+
+                <div class="col-xs-12">
+                    <div class="page-title">
+
+                        <div class="pull-left">
+                            <!-- PAGE HEADING TAG - START -->
+                            <h1 class="title">Add Patient</h1>
+                            <!-- PAGE HEADING TAG - END -->
+                        </div>
+
+                        <div class="pull-right hidden-xs">
+                            <ol class="breadcrumb">
+                                <li>
+                                    <a href="index.html"><i class="fa fa-home"></i>Home</a>
+                                </li>
+                                <li>
+                                    <a href="hos-patients.html">Patients</a>
+                                </li>
+                                <li class="active">
+                                    <strong>Add Patient</strong>
+                                </li>
+                            </ol>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <!-- MAIN CONTENT AREA STARTS -->
+
+                <div class="col-xs-12 mb-30">
+                    <div class="add-header-wrapper gradient-blue curved-section text-center">
+                        <h2 class="uppercase bold w-text">Add new Hopital</h2>
+                        <div class="before-text">add hopital</div>
+                        <p class="g-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iusto magni consequatur excepturi ab veritatis id facere facilis tempora sit amet, consectetur adipisicing elit. Iusto magni.</p>
+                    </div>
+
+                    <div class=" bg-w">
+                        <div class="col-lg-10 col-lg-offset-1 col-xs-12">
+                            <section class="box ">
+                                <header class="panel_header">
+                                    <h2 class="title pull-left">Basic Info</h2>
+                                    <div class="actions panel_actions pull-right">
+                                        <a class="box_toggle fa fa-chevron-down"></a>
+                                        <a class="box_setting fa fa-cog" data-toggle="modal" href="#section-settings"></a>
+                                        <a class="box_close fa fa-times"></a>
+                                    </div>
+                                </header>
+                                <div class="content-body">
+                                    <div class="row">
+                                        <div class="col-xs-12">
+                                            <form method="post">
+                                                {% csrf_token %}
+
+                                                    <div class="form-group">
+                                                        <label class="form-label">Name</label>
+                                                        <div class="controls">                                                
+                                                            {{ form.nom }}
+                                                        </div>
+                                                        {{ form.nom.errors }}
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="form-label">ADDRESSE</label>
+                                                        <div class="controls">
+                                                            {{ form.adresse }}
+                                                        </div>
+                                                        {{ form.adresse.errors }}
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="form-label">ADMIN HOPITAL</label>
+                                                        <div class="controls">
+                                                            {{ form.admin }}
+                                                        </div>
+                                                        {{ form.admin.errors }}    
+                                                    </div>
+                                                
+
+                                                <div class="padding-bottom-30">
+                                                    <div class="text-left">
+                                                        <button type="submit" class="btn btn-primary gradient-blue">Save</button>
+                                                        <a href="{% url 'liste_hopitaux' %}" class="btn btn-default">Cancel</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </section>
+                      {% endblock %}
