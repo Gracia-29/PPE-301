@@ -10,7 +10,7 @@ def demande_inscription_approuvee(request):
     try:
         user = getattr(request, 'user', None)
         if user and user.is_authenticated and getattr(user, 'role', None) == 'patient':
-            validated = DemandeInscription.objects.filter(patient=user, approuvee=True).exists()
+            validated = DemandeInscription.objects.filter(patient=user, statut__in=['approuve', 'valide']).exists()
     except Exception:
         validated = False
     return {'demande_inscription_validee': validated}

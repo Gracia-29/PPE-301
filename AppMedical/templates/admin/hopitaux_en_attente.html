@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Hopitaux en attente{% endblock %}
+{% block body_attrs %}class="dashboard-ui admin-dashboard admin-master-page"{% endblock %}
+{% block content %}
+<section class="content-stack" data-reveal>
+    <section class="table-card">
+        <span class="eyebrow">Validation reseau</span>
+        <h1 class="section-title" style="font-size:2.2rem;">Hopitaux en attente de confirmation</h1>
+        <p class="section-subtitle">Controlez les etablissements nouvellement inscrits avant leur activation sur la plateforme.</p>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Adresse</th>
+                        <th>Administrateur</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for hopital in hopitaux %}
+                        <tr>
+                            <td>{{ hopital.nom }}</td>
+                            <td>{{ hopital.email }}</td>
+                            <td>{{ hopital.adresse }}</td>
+                            <td>{{ hopital.admin.get_full_name|default:hopital.admin.email }}</td>
+                            <td>
+                                <a href="{% url 'confirmer_hopital' hopital.id %}" class="btn btn-secondary">Confirmer</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="5">Aucun hopital en attente.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</section>
+{% endblock %}

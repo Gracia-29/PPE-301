@@ -1,0 +1,151 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Gestion Hopital{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'appmedical/theme.css' %}">
+    <script defer src="{% static 'appmedical/theme.js' %}"></script>
+</head>
+<body {% block body_attrs %}{% endblock %}>
+    <div class="app-shell">
+        <header class="topbar">
+            <div>
+                <strong>Gestion Hopital</strong><br>
+                <span class="muted">Parcours patient, medecin et administration</span>
+            </div>
+            <button type="button" data-sidebar-toggle>Menu</button>
+        </header>
+
+        <aside class="sidebar" data-sidebar>
+            <div class="brand">
+                <div class="brand-mark">GH</div>
+                <div>
+                    <div class="brand-title">Gestion Hopital</div>
+                    <div class="brand-subtitle">Plateforme medicale connectee</div>
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-label">Navigation</div>
+                <nav class="sidebar-nav">
+                    {% if user.is_authenticated %}
+                        {% if user.is_superuser or user.role == 'admin_system' %}
+                            <a class="nav-link" href="{% url 'dashboard_admin' %}">
+                                <span class="nav-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1v-9.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 21v-6h6v6" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+                                </span>
+                                <span>Dashboard</span><span class="nav-pill">Home</span>
+                            </a>
+                            <a class="nav-link" href="{% url 'liste_utilisateurs' %}">
+                                <span class="nav-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none"><path d="M16 19a4 4 0 0 0-8 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="9" r="3.5" stroke="currentColor" stroke-width="2"/><path d="M20 17a3 3 0 0 0-2.5-2.96M4 17a3 3 0 0 1 2.5-2.96" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                                </span>
+                                <span>Utilisateurs</span><span class="nav-pill">Systeme</span>
+                            </a>
+                            <a class="nav-link" href="{% url 'statistiques_admin' %}">
+                                <span class="nav-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none"><path d="M5 19V9M12 19V5M19 19v-7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M3 19h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                                </span>
+                                <span>Statistiques</span><span class="nav-pill">Stats</span>
+                            </a>
+                            <details class="nav-group" open>
+                                <summary class="nav-link nav-group-toggle">
+                                    <span class="nav-icon" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="none"><path d="M4 21h16M7 21V6h10v15M10 9h1M13 9h1M10 12h1M13 12h1M10 15h1M13 15h1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M9 21v-3h6v3" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+                                    </span>
+                                    <span>Hopitaux</span><span class="nav-pill">Reseau</span>
+                                </summary>
+                                <div class="nav-submenu">
+                                    <a class="nav-sublink" href="{% url 'liste_hopitaux_admin' %}">Liste des hopitaux valides</a>
+                                    <a class="nav-sublink" href="{% url 'hopitaux_en_attente' %}">Liste des hopitaux en attente</a>
+                                </div>
+                            </details>
+                            <a class="nav-link" href="{% url 'livreurs_en_attente' %}">
+                                <span class="nav-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none"><path d="M3 7h11v9H3zM14 10h3l3 3v3h-6z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="8" cy="18" r="2" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="18" r="2" stroke="currentColor" stroke-width="2"/></svg>
+                                </span>
+                                <span>Livreurs</span><span class="nav-pill">Flux</span>
+                            </a>
+                        {% elif user.role == 'patient' %}
+                            <a class="nav-link" href="{% url 'dashboard_patient' user.id %}"><span>Mon espace</span><span class="nav-pill">Patient</span></a>
+                            <a class="nav-link" href="{% url 'profil_patient' %}"><span>Profil</span><span class="nav-pill">Compte</span></a>
+                            <a class="nav-link" href="{% url 'liste_rendez_vous' %}"><span>Rendez-vous</span><span class="nav-pill">Suivi</span></a>
+                            <a class="nav-link" href="{% url 'personnes_a_prevenir' %}"><span>Contacts</span><span class="nav-pill">Urgence</span></a>
+                            <a class="nav-link" href="{% url 'mes_ordonnances' %}"><span>Ordonnances</span><span class="nav-pill">PDF</span></a>
+                            <a class="nav-link" href="{% url 'liste_hopitaux' %}">
+                            <span class="nav-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none"><path d="M4 21h16M7 21V6h10v15M10 9h1M13 9h1M10 12h1M13 12h1M10 15h1M13 15h1" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M9 21v-3h6v3" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+                            </span>
+                            <span>Liste des hopitaux</span><span class="nav-pill">Explore</span>
+                        </a>
+                        {% elif user.role == 'medecin' %}
+                            <a class="nav-link" href="{% url 'dashboard_medecin' %}"><span>Tableau de bord</span><span class="nav-pill">Medecin</span></a>
+                            <a class="nav-link" href="{% url 'mes_patients' %}"><span>Mes patients</span><span class="nav-pill">Dossier</span></a>
+                            <a class="nav-link" href="{% url 'liste_rendezvous_medecin' %}"><span>Consultations</span><span class="nav-pill">Agenda</span></a>
+                            <a class="nav-link" href="{% url 'ordonnances_prescrites' %}"><span>Ordonnances</span><span class="nav-pill">Historique</span></a>
+                            <a class="nav-link" href="{% url 'modifier_profil_medecin' %}"><span>Mon profil</span><span class="nav-pill">Edition</span></a>
+                        {% elif user.role == 'admin_hopital' %}
+                            <a class="nav-link" href="{% url 'dashboard_admin_hopital' %}">
+                                <span class="nav-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1v-9.5Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 21v-6h6v6" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+                                </span>
+                                <span>Tableau de bord</span><span class="nav-pill">Hopital</span>
+                            </a>
+                            <a class="nav-link" href="{% url 'liste_medecins' %}">
+                                <span class="nav-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none"><path d="M16 19a4 4 0 0 0-8 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="2"/><path d="M20 17a3 3 0 0 0-2.5-2.9M4 17a3 3 0 0 1 2.5-2.9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                                </span>
+                                <span>Equipe Medicale</span><span class="nav-pill">Equipe</span>
+                            </a>
+                            <a class="nav-link" href="{% url 'demandes_validees' %}">
+                                <span class="nav-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none"><path d="M7 20a5 5 0 0 1 10 0M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M4 19a4 4 0 0 1 3-3.8M20 19a4 4 0 0 0-3-3.8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                                </span>
+                                <span>Nos patients</span><span class="nav-pill">Patient</span>
+                            </a>
+                            <a class="nav-link" href="{% url 'liste_rendezvous_hopital' %}">
+                                <span class="nav-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none"><path d="M7 3v4M17 3v4M4 9h16M6 5h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="m9 15 2 2 4-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </span>
+                                <span>Demandes RDV</span><span class="nav-pill">Flux</span>
+                            </a>
+                            <a class="nav-link" href="{% url 'liste_rendezvous_valides' %}">
+                                <span class="nav-icon" aria-hidden="true">
+                                    <svg viewBox="0 0 24 24" fill="none"><path d="M7 3v4M17 3v4M4 9h16M6 5h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8 14h4M8 18h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                                </span>
+                                <span>RDV valides</span><span class="nav-pill">Agenda</span>
+                            </a>
+                        {% endif %}
+                        <a class="nav-link" href="{% url 'deconnexion' %}">
+                            <span class="nav-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none"><path d="M10 17l-5-5 5-5M5 12h10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 5h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                            </span>
+                            <span>Deconnexion</span><span class="nav-pill">Logout</span>
+                        </a>
+                    {% else %}
+                        <a class="nav-link" href="{% url 'liste_hopitaux' %}"><span>Hopitaux</span><span class="nav-pill">Explore</span></a>
+                        <a class="nav-link" href="{% url 'inscription_patient' %}"><span>Inscription</span><span class="nav-pill">Start</span></a>
+                        <a class="nav-link" href="{% url 'connexion' %}"><span>Connexion</span><span class="nav-pill">Login</span></a>
+                    {% endif %}
+                </nav>
+            </div>
+            <div class="sidebar-card">
+                <h4>{% if user.is_authenticated %}{{ user.get_full_name|default:user.username }}{% else %}Parcours simplifie{% endif %}</h4>
+                <p>{% if user.is_authenticated %}Interface modernisee pour gerer rendez-vous, dossiers medicaux et coordination hopitaliere.{% else %}Connectez-vous pour suivre vos demandes, vos rendez-vous et votre parcours de soins.{% endif %}</p>
+            </div>
+        </aside>
+
+        <main class="page">
+            {% if messages %}
+                <div class="alert-stack">
+                    {% for message in messages %}
+                        <div class="alert {{ message.tags|default:'info' }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+</body>
+</html>

@@ -1,77 +1,44 @@
-                {% extends 'patient/base_patient.html' %}
-                {% load static %}
-                {% block content %}
-
-
-                <section id="main-content" class=" ">
-                    <div class="wrapper main-wrapper row" style=''>
-
-                        <div class='col-xs-12'>
-                            <div class="page-title">
-
-                                <div class="pull-left">
-                                    <!-- PAGE HEADING TAG - START -->
-                                    <h1 class="title">Personne à Prévenir</h1>
-                                    <!-- PAGE HEADING TAG - END -->
-                                </div>
-                                <div class="pull-right">
-                                    <a href="{% url 'ajouter_personne' %}" class="btn btn-success" style=" border-radius: 15ch;" >
-                                        Ajouter une personne
-                                    </a>
-                                </div>
-                                 
-
+{% extends 'patient/base_patient.html' %}
+{% block title %}Personnes a prevenir{% endblock %}
+{% block content %}
+<section class="table-card" data-reveal>
+    <div class="button-row" style="margin-top:0;">
+        <div>
+            <span class="eyebrow">Urgence</span>
+            <h1 class="section-title" style="font-size:2.3rem;">Mes contacts de confiance</h1>
+        </div>
+        <a class="btn btn-secondary" href="{% url 'ajouter_personne' %}">Ajouter un contact</a>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom</th>
+                    <th>Relation</th>
+                    <th>Telephone</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for personne in personnes %}
+                    <tr>
+                        <td>{{ personne.nom }}</td>
+                        <td>{{ personne.relation }}</td>
+                        <td>{{ personne.telephone }}</td>
+                        <td>{{ personne.email|default:"Non renseigne" }}</td>
+                        <td>
+                            <div class="button-row" style="margin-top:0;">
+                                <a class="btn btn-light" href="{% url 'modifier_personne' personne.id %}">Modifier</a>
+                                <a class="btn btn-danger" href="{% url 'supprimer_personne' personne.id %}">Supprimer</a>
                             </div>
-                        </div>
-                
-                        <div class="clearfix"></div>
-                        <!-- MAIN CONTENT AREA STARTS -->
-
-                        <div class="col-lg-4">
-                            <section class="box ">
-                                <div class="content-body p">
-                                {% if messages %}
-                                    {% for message in messages %}
-                                        <div class="alert alert-info">{{ message }}</div>
-                                    {% endfor %}
-                                {% endif %} 
-
-                                {% if request.user.personnes_a_prevenir.all %}
-                                    <div class="row">
-                                        {% for personne in request.user.personnes_a_prevenir.all %}
-                                        <div class="doctors-list v2  relative">
-                                            <div class="doctors-head relative text-left mb-0">  
-                                                <h3 class="header relative bold">Mr/Mm: {{ personne.nom }}</h3>
-                                                <h5 class="boldy">{{ personne.relation }}</h5>
-                                                <div class="doc-rating mb-30">
-                                                   {{ personne.telephone }}
-                                                </div>
-
-                                                <div class="email-div">
-                                                    <i class="fa fa-envelope f-s-14 mr-10"></i><span>Email</span>
-                                                    <a href="#" class="blue-text">
-                                                        <h5 class="text-info">{{ personne.email }}</h5>
-                                                    </a>
-                                                    <div class="d-flex gap-2">
-                                                        <a href="{% url 'modifier_personne' personne.id %}" class="btn btn-sm btn-outline-primary">✏ Modifier</a>
-                                                        <a href="{% url 'supprimer_personne' personne.id %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('Confirmer la suppression ?')">🗑 Supprimer</a>
-                                                    </div>
-                                                </div>  
-                                            </div>
-                                            
-                                        </div>
-                                    {% endfor %}
-                                    
-                                    </div>
-                                    {% else %}
-                                        <div class="alert alert-info">
-                                            Aucune personne à prévenir n’a encore été enregistrée.
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </section>
-                        </div>
-                    </div>
-                </section>
-
-                {% endblock %} 
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="5">Aucun contact enregistre.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

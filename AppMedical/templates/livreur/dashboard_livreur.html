@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard Livreur{% endblock %}
+{% block content %}
+<section class="dashboard">
+    <div class="dashboard-header">
+        <h1>Dashboard Livreur</h1>
+        <p>Bienvenue, {{ user.get_full_name }}</p>
+    </div>
+    <div class="dashboard-content">
+        <p>Votre statut : {{ user.livreur.statut }}</p>
+        <p>Zone de livraison : {{ user.livreur.zone_livraison|default:"Non spécifiée" }}</p>
+        <!-- Add more content for delivery dashboard -->
+    </div>
+</section>
+{% endblock %}

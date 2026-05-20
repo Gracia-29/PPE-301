@@ -11,6 +11,7 @@ class CustomUser(AbstractUser):
         ('medecin', 'Médecin'),
         ('admin_hopital', 'Admin Hôpital'),
         ('admin_system', 'Admin Système'),
+        ('livreur', 'Livreur'),
     ]
     GENRE_CHOICES = [
         ('H', 'Homme'),
@@ -38,9 +39,29 @@ class CustomUser(AbstractUser):
     updated_at = models.DateTimeField(auto_now=True)
 
 class Hopital(models.Model):
+    STATUT_CHOICES = [
+        ('en_attente', 'En attente de confirmation'),
+        ('confirme', 'Confirmé'),
+    ]
+    TYPE_CHOICES = [
+        ('general', 'General'),
+        ('clinique', 'Clinique'),
+        ('specialise', 'Specialise'),
+        ('centre', 'Centre medical'),
+    ]
     nom = models.CharField(max_length=100)
+    type = models.CharField(max_length=20, choices=TYPE_CHOICES, blank=True, null=True)
+    numero_enregistrement = models.CharField(max_length=100, blank=True, null=True)
+    nif = models.CharField(max_length=100, blank=True, null=True)
+    licence = models.FileField(upload_to='licences/', blank=True, null=True)
+    date_expiration = models.DateField(blank=True, null=True)
     adresse = models.TextField()
-    admin = models.ForeignKey(CustomUser, on_delete=models.CASCADE, limit_choices_to={'role': 'admin_hopital'}, related_name='hopital_admin')
+    ville = models.CharField(max_length=100, blank=True, null=True)
+    telephone = models.CharField(max_length=20, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    directeur = models.CharField(max_length=150, blank=True, null=True)
+    admin = models.ForeignKey(CustomUser, on_delete=models.CASCADE, limit_choices_to={'role': 'admin_hopital'}, related_name='hopital_admin', null=True, blank=True)
+    statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='en_attente')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -83,7 +104,7 @@ class DemandeInscription(models.Model):
 
     
     def __str__(self):
-        return f"{self.patient.username} -> {self.hopital.nom} ({'✔️' if self.approuvee else '❌' if self.approuvee is False else '🕒'})"
+        return f"{self.patient.username} -> {self.hopital.nom} ({self.get_statut_display()})"
     
 class PersonneAPrevenir(models.Model):
     patient = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='personnes_a_prevenir')
@@ -100,6 +121,7 @@ class Medecin(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     specialite = models.CharField(max_length=100)
     telephone = models.CharField(max_length=20)
+    mot_de_passe_temporaire = models.CharField(max_length=100, blank=True)
     hopital = models.ForeignKey("Hopital", on_delete=models.CASCADE)
     patients = models.ManyToManyField(CustomUser, related_name='medecins_assignés', limit_choices_to={'role': 'patient'}, blank=True)
 
@@ -186,9 +208,17 @@ class MedicamentPrescrit(models.Model):
         return f"{self.nom} ({self.dosage}) - {self.frequence} pendant {self.duree}"
     
 
-class Notification(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    message = models.TextField()
-    lu = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+class Livreur(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
+    permis_conduire = models.CharField(max_length=50, blank=True, null=True)  # Type de permis
+    vehicule = models.CharField(max_length=100, blank=True, null=True)  # Type de véhicule
+    zone_livraison = models.CharField(max_length=100, blank=True, null=True)  # Zone de livraison
+    statut = models.CharField(max_length=20, choices=[
+        ('en_attente', 'En attente'),
+        ('actif', 'Actif'),
+        ('suspendu', 'Suspendu'),
+    ], default='en_attente')
+
+    def __str__(self):
+        return f"{self.user.get_full_name()} - Livreur"
 

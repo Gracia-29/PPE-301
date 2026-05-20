@@ -1,72 +1,19 @@
-ç {% extends "medecin/base_medecin.html" %}
-
+{% extends 'medecin/base_medecin.html' %}
+{% block title %}Ajouter un suivi medical{% endblock %}
+{% block body_attrs %}class="dashboard-ui medecin-area medecin-dashboard"{% endblock %}
 {% block content %}
-<form method="POST" enctype="multipart/form-data" id="form-suivi">
-    {% csrf_token %}
-    {{ form.non_field_errors }}
-
-    <!-- Champs du formulaire sans le champ fichiers -->
-    {% for field in form %}
-        {% if field.name != "fichiers" %}
-            <div class="mb-3">
-                {{ field.label_tag }}{{ field }}
-                {{ field.errors }}
-            </div>
-        {% endif %}
-    {% endfor %}
-
-    <!-- Input pour choisir un fichier à la fois -->
-    <label for="file-input" class="form-label">Ajouter un fichier joint</label>
-    <input type="file" id="file-input" class="form-control mb-2">
-
-    <button type="button" id="add-file-btn" class="btn btn-secondary mb-3">Ajouter ce fichier</button>
-
-    <h5>Fichiers sélectionnés :</h5>
-    <ul id="file-list"></ul>
-
-    <!-- Input multiple caché qui sera rempli par JS avant soumission -->
-    <input type="file" name="fichiers" id="files-multiple" multiple style="display:none;">
-    <button type="submit" class="btn btn-primary">Enregistrer le suivi</button>
-</form>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const fileInput = document.getElementById('file-input');
-    const addFileBtn = document.getElementById('add-file-btn');
-    const fileList = document.getElementById('file-list');
-    const filesMultiple = document.getElementById('files-multiple');
-
-    let filesToUpload = [];
-
-    addFileBtn.addEventListener('click', () => {
-        if (fileInput.files.length > 0) {
-            const file = fileInput.files[0];
-
-            // Eviter doublons (optionnel)
-            if (filesToUpload.some(f => f.name === file.name && f.size === file.size)) {
-                alert("Ce fichier est déjà sélectionné.");
-                fileInput.value = '';
-                return;
-            }
-
-            filesToUpload.push(file);
-
-            const li = document.createElement('li');
-            li.textContent = file.name;
-            fileList.appendChild(li);
-
-            fileInput.value = '';
-
-            // Met à jour l'input multiple caché avec tous les fichiers sélectionnés
-            const dataTransfer = new DataTransfer();
-            filesToUpload.forEach(f => dataTransfer.items.add(f));
-            filesMultiple.files = dataTransfer.files;
-        } else {
-            alert("Veuillez sélectionner un fichier avant d'ajouter.");
-        }
-    });
-});
-</script>
+<section class="panel" data-reveal>
+    <span class="eyebrow">Consultation</span>
+    <h1 class="section-title" style="font-size:2.3rem;">Ajouter un suivi pour {{ dossier.patient.get_full_name|default:dossier.patient.username }}</h1>
+    <form method="post" enctype="multipart/form-data" class="form-layout">
+        {% csrf_token %}
+        {% include 'includes/form_fields.html' with form=form %}
+        <div class="field-group">
+            <label for="id_fichiers">Fichiers associes</label>
+            <input type="file" id="id_fichiers" name="fichiers" multiple>
+            <div class="field-help">Ajoutez des comptes rendus, resultats ou documents utiles.</div>
+        </div>
+        <button type="submit">Ajouter le suivi</button>
+    </form>
+</section>
 {% endblock %}
-
-

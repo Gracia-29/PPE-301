@@ -1,39 +1,31 @@
-{% extends "hopital/base_admin_hopital.html" %}
-{% load widget_tweaks %}  {# Permet de personnaliser les champs #}
-<center>
+{% extends 'base.html' %}
+{% block title %}Ajouter un medecin{% endblock %}
+{% block body_attrs %}class="dashboard-ui admin-dashboard hospital-master-page"{% endblock %}
 {% block content %}
-<section id="main-content" class=" ">
-<div class="container mt-5">
-    <div class="card shadow-sm border-1">
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">👨‍⚕️ Ajouter un Médecin</h4>
+<section class="content-stack hospital-page" data-reveal>
+    <section class="hospital-section-header">
+        <div>
+            <span class="eyebrow hospital-eyebrow">Ressources humaines</span>
+            <h1 class="section-title hospital-title">Ajouter un medecin</h1>
+            <p class="section-subtitle hospital-subtitle">Creez un nouveau profil medical et preparez son acces a l'espace hopital.</p>
         </div>
-        <div class="card-body">
-            <form method="post">
-                {% csrf_token %}
+        <span class="hospital-summary-pill">Nouveau compte</span>
+    </section>
 
-                {% for field in form %}
-                    <div class="mb-3">
-                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                        {% render_field field class="form-control" %}
-                        {% if field.errors %}
-                            <div class="text-danger small">
-                                {{ field.errors|striptags }}
-                            </div>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-
-                <div class="text-end">
-                    <button type="submit" class="btn btn-success">
-                        💾 Enregistrer
-                    </button>
-                </div>
-            </form>
+    <section class="table-card hospital-table-card">
+        <div class="hospital-table-banner">
+            <span class="hospital-banner-dot"></span>
+            <strong>Informations du medecin</strong>
+            <span>Renseignez les donnees utiles pour l'equipe medicale.</span>
         </div>
-    </div>
-</div>
-
+        <form method="post" class="form-layout hospital-form-panel">
+            {% csrf_token %}
+            {% include 'includes/form_fields.html' with form=form %}
+            <div class="button-row hospital-button-row">
+                <button type="submit" class="btn btn-primary">Creer le compte medecin</button>
+                <a class="btn btn-light" href="{% url 'liste_medecins' %}">Retour</a>
+            </div>
+        </form>
+    </section>
 </section>
 {% endblock %}
-</center>

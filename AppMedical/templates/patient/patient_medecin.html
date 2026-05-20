@@ -1,54 +1,30 @@
-{% extends "medecin/base_medecin.html" %}
-{% load static %}
-
+{% extends 'medecin/base_medecin.html' %}
+{% block title %}Mes patients{% endblock %}
+{% block body_attrs %}class="dashboard-ui medecin-area medecin-dashboard"{% endblock %}
 {% block content %}
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="mb-0">Mes patients</h1>
-        <div class="d-flex justify-content-end mb-3" style="max-width: 300px; margin-left: auto;">
-            <form method="get" class="w-100 d-flex">
-                <div class="input-group input-group-sm">
-                <input type="text" name="q" class="form-control" placeholder="Rechercher..." value="{{ query|default:'' }}">
-                <button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
-                </div>
-            </form>
+<section class="panel" data-reveal>
+    <span class="eyebrow">File active</span>
+    <h1 class="section-title" style="font-size:2.3rem;">Patients assignes</h1>
+    <form method="get" class="form-layout">
+        <div class="field-group">
+            <label for="q">Recherche</label>
+            <input type="text" id="q" name="q" value="{{ query }}" placeholder="Nom ou prenom du patient">
         </div>
-
+        <button type="submit">Rechercher</button>
+    </form>
+    <div class="card-grid" style="margin-top:24px;">
         {% for patient in patients %}
-           <a href="{% url 'ajouter_suivi_medical' patient.id %}" class="btn btn-success">Ajouter suivi</a>
-        {% endfor %}
-
-
-
-    </div>
-
-    {% if patients %}
-        <div class="row">
-            {% for patient in patients %}
-                <div class="col-md-4 mb-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">{{ patient.get_full_name }}</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">@{{ patient.username }}</h6>
-
-                            <div class="mt-auto">
-                                <a href="{% url 'voir_dossier_medical' patient.id %}" class="btn btn-outline-primary btn-sm me-2">
-                                    Voir dossier médical
-                                </a>
-                                <a href="{% url 'modifier_dossier_medical' patient.id %}" class="btn btn-outline-secondary btn-sm">
-                                    Modifier dossier médical
-                                </a>
-                                <a href="{% url 'creer_ordonnance' patient.id %}" class="btn btn-outline-success btn-sm">
-                                    Prescrire ordonnance
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+            <article class="list-card">
+                <h3>{{ patient.get_full_name|default:patient.username }}</h3>
+                <p class="muted">{{ patient.email }}</p>
+                <div class="button-row">
+                    <a class="btn btn-light" href="{% url 'voir_dossier_medical' patient.id %}">Voir le dossier</a>
+                    <a class="btn btn-secondary" href="{% url 'creer_ordonnance' patient.id %}">Nouvelle ordonnance</a>
                 </div>
-            {% endfor %}
-        </div>
-    {% else %}
-        <p>Aucun patient ne vous a encore été assigné.</p>
-    {% endif %}
-</div>
+            </article>
+        {% empty %}
+            <div class="empty-state">Aucun patient assigne pour le moment.</div>
+        {% endfor %}
+    </div>
+</section>
 {% endblock %}

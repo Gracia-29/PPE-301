@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}Statistiques admin{% endblock %}
+{% block body_attrs %}class="dashboard-ui admin-dashboard admin-master-page"{% endblock %}
+{% block content %}
+<section class="content-stack" data-reveal>
+    <section>
+        <span class="eyebrow">Pilotage</span>
+        <h1 class="section-title" style="font-size:2.2rem;">Statistiques globales</h1>
+        <p class="section-subtitle">Vue d'ensemble sur les comptes, hopitaux, demandes et rendez-vous.</p>
+    </section>
+
+    <section class="metric-grid">
+        <article class="metric-card">
+            <span class="tag">Utilisateurs</span>
+            <div class="metric-value">{{ total_utilisateurs }}</div>
+            <p class="muted">Comptes enregistres sur la plateforme.</p>
+        </article>
+        <article class="metric-card">
+            <span class="tag">Actifs</span>
+            <div class="metric-value">{{ utilisateurs_actifs }}</div>
+            <p class="muted">Utilisateurs actuellement actifs.</p>
+        </article>
+        <article class="metric-card">
+            <span class="tag">Inactifs</span>
+            <div class="metric-value">{{ utilisateurs_inactifs }}</div>
+            <p class="muted">Comptes desactives.</p>
+        </article>
+        <article class="metric-card">
+            <span class="tag">Hopitaux</span>
+            <div class="metric-value">{{ total_hopitaux }}</div>
+            <p class="muted">Structures hospitalieres enregistrees.</p>
+        </article>
+    </section>
+
+    <section class="dashboard-grid two-up">
+        <article class="panel">
+            <h3 class="section-title" style="font-size:1.4rem; margin-top:0;">Repartition des utilisateurs</h3>
+            <div class="detail-list">
+                <div class="list-card"><strong>Patients</strong><span>{{ total_patients }}</span></div>
+                <div class="list-card"><strong>Medecins</strong><span>{{ total_medecins }}</span></div>
+                <div class="list-card"><strong>Admins hopital</strong><span>{{ total_admins_hopital }}</span></div>
+                <div class="list-card"><strong>Livreurs</strong><span>{{ total_livreurs }}</span></div>
+            </div>
+        </article>
+        <article class="panel">
+            <h3 class="section-title" style="font-size:1.4rem; margin-top:0;">Activite plateforme</h3>
+            <div class="detail-list">
+                <div class="list-card"><strong>Hopitaux confirmes</strong><span>{{ hopitaux_confirmes }}</span></div>
+                <div class="list-card"><strong>Hopitaux en attente</strong><span>{{ hopitaux_en_attente }}</span></div>
+                <div class="list-card"><strong>Demandes patients en attente</strong><span>{{ demandes_patients_en_attente }}</span></div>
+                <div class="list-card"><strong>Rendez-vous en attente</strong><span>{{ rendez_vous_en_attente }} / {{ rendez_vous_total }}</span></div>
+            </div>
+        </article>
+    </section>
+</section>
+{% endblock %}

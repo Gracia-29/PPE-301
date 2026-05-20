@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Livreurs en attente{% endblock %}
+{% block body_attrs %}class="dashboard-ui admin-dashboard admin-master-page"{% endblock %}
+{% block content %}
+<section class="content-stack" data-reveal>
+    <section class="table-card">
+        <span class="eyebrow">Activation logistique</span>
+        <h1 class="section-title" style="font-size:2.2rem;">Livreurs en attente d'activation</h1>
+        <p class="section-subtitle">Verifiez les profils livreurs, les permis et les zones couvertes avant activation.</p>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Telephone</th>
+                        <th>Permis</th>
+                        <th>Vehicule</th>
+                        <th>Zone</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for livreur in livreurs %}
+                        <tr>
+                            <td>{{ livreur.user.get_full_name|default:livreur.user.email }}</td>
+                            <td>{{ livreur.user.email }}</td>
+                            <td>{{ livreur.user.telephone }}</td>
+                            <td>{{ livreur.permis_conduire }}</td>
+                            <td>{{ livreur.vehicule }}</td>
+                            <td>{{ livreur.zone_livraison }}</td>
+                            <td>
+                                <a href="{% url 'activer_livreur' livreur.id %}" class="btn btn-secondary">Activer</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="7">Aucun livreur en attente.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</section>
+{% endblock %}

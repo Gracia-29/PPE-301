@@ -26,7 +26,7 @@ class LoginAPI(APIView):
                 "role": user.role,
                 "a_hopital": DemandeInscription.objects.filter(
                     patient=user,
-                    approuvee=True
+                    statut__in=['approuve', 'valide']
                 ).exists()
             }
         })

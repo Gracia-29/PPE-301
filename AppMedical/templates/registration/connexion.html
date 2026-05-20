@@ -1,138 +1,31 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-
-
-<!-- Mirrored from medash.netlify.app/html/ui-login by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 25 Mar 2025 12:28:50 GMT -->
-<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
-<head>
-    
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Multipurpose Dashboard</title>
-    <meta content="" name="description" />
-    <meta content="" name="author" />
-
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="{% static 'assets/images/favicon.png'%}" type="image/x-icon" />
-    <!-- For iPhone -->
-    <link rel="apple-touch-icon-precomposed" href="{% static 'assets/images/apple-touch-icon-57-precomposed.png'%}" />
-    <!-- For iPhone 4 Retina display -->
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{% static 'assets/images/apple-touch-icon-114-precomposed.png'%}" />
-    <!-- For iPad -->
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{% static 'assets/images/apple-touch-icon-72-precomposed.png'%}" />
-    <!-- For iPad Retina display -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{% static 'assets/images/apple-touch-icon-144-precomposed.png'%}" />
-
-    <!-- CORE CSS FRAMEWORK - START -->
-    <link href="{% static 'assets/plugins/pace/pace-theme-flash.css' %}" rel="stylesheet" type="text/css" media="screen" />
-    <link href="{% static 'assets/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'assets/plugins/bootstrap/css/bootstrap-theme.min.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'assets1/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'assets/css/animate.min.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'assets/plugins/perfect-scrollbar/perfect-scrollbar.css' %}" rel="stylesheet" type="text/css" />
-    <!-- CORE CSS FRAMEWORK - END -->
-
-    <!-- HEADER SCRIPTS INCLUDED ON THIS PAGE - START -->
-
-    <!-- HEADER SCRIPTS INCLUDED ON THIS PAGE - END -->
-
-    <!-- CORE CSS TEMPLATE - START -->
-    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'assets/css/responsive.css' %}" rel="stylesheet" type="text/css" />
-    <!-- CORE CSS TEMPLATE - END -->
-
-</head>
-<!-- END HEAD -->
-
-<!-- BEGIN BODY -->
-
-<body class=" login_page">
-
-    <div class="container-fluid">
-        <div class="login-wrapper row">
-            <div id="login" class="login loginpage col-lg-offset-3 col-md-offset-3 col-sm-offset-3 col-xs-offset-0 col-xs-12 col-sm-6 col-lg-6">    
-                <div class="login-form-header">
-                     <img src="{% static 'data/icons/padlock.png' %}" alt="login-icon" style="max-width:64px">
-                     <div class="login-header">
-                         <h4 class="bold color-white">Login Now!</h4>
-                         <h4><small>Please enter your credentials to login.</small></h4>
-                     </div>
-                </div>
-               
-                <div class="box login">
-
-                    <div class="content-body" style="padding-top:30px">
-
-                        {% if messages %}
-                            {% for message in messages %}
-                                <div class="alert alert-warning">{{ message }}</div>
-                            {% endfor %}
-                        {% endif %}
-
-
-                        <form method="post" novalidate>
-                            {% csrf_token %}
-
-
-                            <div class="row">
-                                <div class="col-xs-12">
-
-                                        <div class="form-group">
-                                            <label class="form-label">Username</label>
-                                            {{ form.username }}
-                                    </div>
-
-
-                                    <div class="form-group">
-                                        <label class="form-label">Password</label>
-                                            {{ form.password }}
-                                    </div>
-
-                                    <div class="pull-left">
-                                        <button type="submit" class="btn btn-primary mt-10 btn-corner right-15">Se connecter</button>
-                                        <a class='btn mt-10 btn-corner signup' href="{% url 'inscription' %}">Sign up</a>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <p id="nav">
-                    <a class="pull-left" href="#" title="Password Lost and Found">Forgot password?</a>
-                </p>
-
+{% extends 'base.html' %}
+{% block title %}Connexion{% endblock %}
+{% block body_attrs %}class="auth-body"{% endblock %}
+{% block content %}
+<section class="auth-stage">
+    <div class="auth-shell auth-shell-split" data-reveal>
+        <aside class="auth-showcase">
+            <div class="auth-showcase-inner">
+                <div class="auth-showcase-mark">+</div>
+                <h1>Gestion Hopital</h1>
+                <p>Votre plateforme de gestion medicale tout-en-un. Simple, securisee, efficace.</p>
             </div>
-        </div>
+        </aside>
+        <section class="auth-form-side">
+            <div class="auth-tabs">
+                <a class="auth-tab is-active" href="{% url 'connexion' %}">Connexion</a>
+                <a class="auth-tab" href="{% url 'inscription_patient' %}">Inscription</a>
+            </div>
+            <section class="auth-card auth-card-clean">
+                <h2 class="auth-title">Connexion</h2>
+                <form method="post" class="form-layout">
+                    {% csrf_token %}
+                    {% include 'includes/form_fields.html' with form=form %}
+                    <button type="submit">Se connecter</button>
+                </form>
+                <p class="auth-switch">Pas encore de compte ? <a href="{% url 'inscription_patient' %}">Creer un compte</a></p>
+            </section>
+        </section>
     </div>
-
-    <!-- MAIN CONTENT AREA ENDS -->
-    <!-- LOAD FILES AT PAGE END FOR FASTER LOADING -->
-
-    <!-- CORE JS FRAMEWORK - START -->
-    <script src="../static/assets/js/jquery.min.js"></script>
-    <script src="../static/assets/js/jquery.easing.min.js"></script>
-    <script src="../static/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script src="../static/assets/plugins/pace/pace.min.js"></script>
-    <script src="../static/assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js"></script>
-    <script src="../static/assets/plugins/viewport/viewportchecker.js"></script>
-    <script>
-        window.jQuery || document.write('<script src="../static/assets/js/jquery.min.js"><\/script>');
-    </script>
-    <!-- CORE JS FRAMEWORK - END -->
-
-    <!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - START -->
-
-    <!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - END -->
-
-    <!-- CORE TEMPLATE JS - START -->
-    <script src="../static/assets/js/scripts.js"></script>
-    <!-- END CORE TEMPLATE JS - END -->
-
-</body>
-
-
-<!-- Mirrored from medash.netlify.app/html/ui-login by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 25 Mar 2025 12:28:51 GMT -->
-</html>
+</section>
+{% endblock %}

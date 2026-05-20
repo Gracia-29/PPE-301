@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Inscription{% endblock %}
+{% block body_attrs %}class="auth-body"{% endblock %}
+{% block content %}
+<section class="auth-stage auth-stage-wide">
+    <div class="auth-shell auth-shell-split" data-reveal>
+        <aside class="auth-showcase">
+            <div class="auth-showcase-inner">
+                <div class="auth-showcase-mark">+</div>
+                <h1>Gestion Hopital</h1>
+                <p>Creez votre compte pour acceder a vos services medicaux en ligne.</p>
+            </div>
+        </aside>
+        <section class="auth-form-side">
+            <div class="auth-tabs">
+                <a class="auth-tab" href="{% url 'connexion' %}">Connexion</a>
+                <a class="auth-tab is-active" href="{% url 'inscription_patient' %}">Inscription</a>
+            </div>
+            <section class="auth-card auth-card-clean auth-card-clean-wide">
+                <h2 class="auth-title">Inscription</h2>
+                <form method="post" class="form-layout">
+                    {% csrf_token %}
+                    {% include 'includes/form_fields.html' with form=form %}
+                    <div class="button-row">
+                        <button type="submit">Creer mon compte</button>
+                    </div>
+                </form>
+                <p class="auth-switch">Vous avez deja un compte ? <a href="{% url 'connexion' %}">Se connecter</a></p>
+            </section>
+        </section>
+    </div>
+</section>
+{% endblock %}

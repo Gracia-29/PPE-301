@@ -1,83 +1,45 @@
-{% extends "hopital/base_admin_hopital.html" %}
+{% extends 'base.html' %}
+{% block title %}Demandes validees{% endblock %}
+{% block body_attrs %}class="dashboard-ui admin-dashboard hospital-master-page"{% endblock %}
 {% block content %}
+<section class="content-stack hospital-page" data-reveal>
+    <section class="hospital-section-header">
+        <div>
+            <span class="eyebrow hospital-eyebrow">Hopital</span>
+            <h1 class="section-title hospital-title">Demandes validees</h1>
+            <p class="section-subtitle hospital-subtitle">Patients deja approuves et rattaches a votre structure.</p>
+        </div>
+        <span class="hospital-summary-pill">Patients valides</span>
+    </section>
 
-<section id="main-content" class=" ">
-            <div class="wrapper main-wrapper row" style=''>
-
-                <div class='col-xs-12'>
-                    <div class="page-title">
-
-                        <div class="pull-left">
-                            <!-- PAGE HEADING TAG - START -->
-                            <h1 class="title">All Patients</h1>
-                            <!-- PAGE HEADING TAG - END -->
-                        </div>
-
-                    </div>
-                </div>
-
-                <div class="clearfix"></div>
-                <!-- MAIN CONTENT AREA STARTS -->
-
-                <div class="col-lg-4 col-md-6">
-                    <section class="box ">
-                        <div class="content-body p">
-                        {% if demandes %}
-                            <div class="row">
-                               {% for demande in demandes %}
-                                <div class="doctors-list patient relative">
-                                    <div class="doctors-head relative text-center">
-                                        <div class="patient-img img-circle">
-                                            <img src="{{ demande.patient.photo.url }}" class="rad-50 center-block" style="width: 120px; height: 120px; object-fit: cover;" >
-                                            <div class="stutas recent"></div>
-                                        </div>
-                                        <h3 class="header w-text relative bold">Name : {{ demande.patient.first_name }} {{ demande.patient.last_name }}</h3>
-                                        
-                                    </div>
-                                    <div class="row">
-                                        <div class="patients-info relative" >
-                                            <div class="col-sm-6 col-xs-12">
-                                                <div class="patient-card has-shadow2">
-                                                    <div class="doc-info-wrap">
-                                                        <div class="patient-info">
-                                                            <h5 class="bold">{{ demande.patient.genre }}</h5>
-                                                            <h6>Patient  Gender</h6>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6 col-xs-12">
-                                                <div class="patient-card has-shadow2">
-                                                    <div class="doc-info-wrap">
-                                                        <div class="patient-info">
-                                                            <h5 class="bold">{{ demande.patient.date_naissance }}</h5>
-                                                            <h6>Date of Birth</h6>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                        </div>
-                                    </div><!-- end row -->
-                                    
-                                    <div class="col-xs-12 mb-30">
-                                        <div class="form-group no-mb">
-                                            <button type="button" class="btn btn-primary btn-lg gradient-blue" style="width:100%"> View Profile</button>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            <div class="alert alert-info text-center">
-                                Aucune demande validée.
-                            </div>
-                        {% endif %}   
-                        </div>
-                    </section>
-                </div>
-            </div>
-        </section>
-        {% endblock %}
-
-                
+    <section class="table-card hospital-table-card">
+        <div class="hospital-table-banner">
+            <span class="hospital-banner-dot"></span>
+            <strong>Admissions validees</strong>
+            <span>Suivi des patients approuves dans l'hopital.</span>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Hopital</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for demande in demandes %}
+                        <tr>
+                            <td>{{ demande.patient.get_full_name|default:demande.patient.username }}</td>
+                            <td>{{ demande.hopital.nom }}</td>
+                            <td><span class="status-pill approved">Validee</span></td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="3">Aucune demande validee.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</section>
+{% endblock %}

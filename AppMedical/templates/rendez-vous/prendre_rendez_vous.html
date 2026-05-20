@@ -1,151 +1,19 @@
-﻿{% extends 'patient/base_patient.html' %}
-{% load static %}
-{% load widget_tweaks %}
-
+{% extends 'patient/base_patient.html' %}
+{% block title %}Prendre rendez-vous{% endblock %}
+{% block body_attrs %}class="dashboard-ui patient-area patient-dashboard"{% endblock %}
 {% block content %}
-<section id="main-content">
-    <style>
-        .rdv-wrap {
-            min-height: calc(100vh - 80px);
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            width: 100%;
-            max-width: 980px;
-            margin: 0 auto;
-            padding: 96px 20px 40px;
-            box-sizing: border-box;
-            background: linear-gradient(135deg, #f8f6f0 0%, #f8f6f0; 55%, #f8f6f0 100%);
-        }
-        .rdv-card {
-            width: 100%;
-            max-width: 760px;
-            border: 0;
-            border-radius: 18px;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(22, 44, 88, 0.12);
-            background: #ffffff;
-        }
-        @media (max-width: 768px) {
-            .rdv-wrap {
-                padding: 88px 12px 28px;
-            }
-        }
-        .rdv-header {
-            padding: 22px 26px;
-            background: linear-gradient(90deg, #1f73c9, #2fa3e6);
-            color: #fff;
-        }
-        .rdv-header h3 {
-            margin: 0 0 4px;
-            font-weight: 700;
-        }
-        .rdv-header p {
-            margin: 0;
-            opacity: 0.9;
-        }
-        .rdv-body {
-            padding: 24px 26px 28px;
-        }
-        .rdv-label {
-            font-weight: 600;
-            color: #1f2b4a;
-            margin-bottom: 6px;
-            display: block;
-        }
-        .rdv-field {
-            border-radius: 10px;
-            min-height: 44px;
-            border: 1px solid #f0f3db;
-            box-shadow: none;
-            transition: border-color .2s ease, box-shadow .2s ease;
-        }
-        .rdv-field:focus {
-            border-color: #2fa3e6;
-            box-shadow: 0 0 0 3px rgba(47, 163, 230, 0.12);
-        }
-        textarea.rdv-field {
-            min-height: 100px;
-            resize: vertical;
-        }
-        .rdv-submit {
-            width: 100%;
-            min-height: 46px;
-            border: 0;
-            border-radius: 10px;
-            background: linear-gradient(90deg, #1f73c9, #2fa3e6);
-            color: #fff;
-            font-weight: 700;
-            letter-spacing: 0.2px;
-        }
-        .rdv-submit:hover {
-            filter: brightness(0.98);
-        }
-        .rdv-error {
-            color: #c9302c;
-            font-size: 12px;
-            margin-top: 6px;
-        }
-    </style>
-
-    <div class="rdv-wrap">
-        <div class="rdv-card">
-            <div class="rdv-header">
-                <h3><i class="fa fa-calendar-check-o"></i> Demande de rendez-vous</h3>
-                <p>Selectionnez un hopital, une date, une heure et precisez votre motif.</p>
-            </div>
-
-            <div class="rdv-body">
-                <form method="POST" novalidate>
-                    {% csrf_token %}
-
-                    {% if form.non_field_errors %}
-                        <div class="alert alert-danger">
-                            {% for error in form.non_field_errors %}
-                                <div>{{ error }}</div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-
-                    <div class="form-group mb-3">
-                        <label for="{{ form.hopital.id_for_label }}" class="rdv-label">Hopital</label>
-                        {% render_field form.hopital class="form-control rdv-field" %}
-                        {% if form.hopital.errors %}
-                            <div class="rdv-error">{{ form.hopital.errors|join:", " }}</div>
-                        {% endif %}
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-6 form-group mb-3">
-                            <label for="{{ form.date.id_for_label }}" class="rdv-label">Date</label>
-                            {% render_field form.date class="form-control rdv-field" %}
-                            {% if form.date.errors %}
-                                <div class="rdv-error">{{ form.date.errors|join:", " }}</div>
-                            {% endif %}
-                        </div>
-                        <div class="col-sm-6 form-group mb-3">
-                            <label for="{{ form.heure.id_for_label }}" class="rdv-label">Heure</label>
-                            {% render_field form.heure class="form-control rdv-field" %}
-                            {% if form.heure.errors %}
-                                <div class="rdv-error">{{ form.heure.errors|join:", " }}</div>
-                            {% endif %}
-                        </div>
-                    </div>
-
-                    <div class="form-group mb-4">
-                        <label for="{{ form.motif.id_for_label }}" class="rdv-label">Motif</label>
-                        {% render_field form.motif class="form-control rdv-field" placeholder="Ex: douleur thoracique, controle, consultation generale..." %}
-                        {% if form.motif.errors %}
-                            <div class="rdv-error">{{ form.motif.errors|join:", " }}</div>
-                        {% endif %}
-                    </div>
-
-                    <button type="submit" class="rdv-submit">
-                        <i class="fa fa-paper-plane-o"></i> Envoyer la demande
-                    </button>
-                </form>
-            </div>
-        </div>
-    </div>
+<section class="split-layout">
+    <article class="panel" data-reveal>
+        <span class="eyebrow">Prise de rendez-vous</span>
+        <h1 class="section-title" style="font-size:2.3rem;">Planifier une consultation</h1>
+        <p class="muted">Selectionnez un hopital valide pour votre dossier, choisissez la date et decrivez brievement le motif.</p>
+    </article>
+    <article class="panel" data-reveal>
+        <form method="post" class="form-layout">
+            {% csrf_token %}
+            {% include 'includes/form_fields.html' with form=form %}
+            <button type="submit">Envoyer la demande</button>
+        </form>
+    </article>
 </section>
 {% endblock %}

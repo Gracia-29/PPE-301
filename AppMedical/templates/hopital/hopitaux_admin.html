@@ -1,21 +1,83 @@
-{% extends "admin/base_admin.html" %}
+{% extends 'base.html' %}
+{% block title %}Hopitaux | Admin{% endblock %}
+{% block body_attrs %}class="dashboard-ui admin-dashboard hospital-master-page"{% endblock %}
 {% block content %}
-<center>
-<div class="container mt-5">
-    <h2>Liste des hôpitaux</h2>
-    <div class="row justify-content-center">
-        {% for hopital in hopitaux %}
-            <div class="card mt-4 mx-auto" style="max-width: 500px; width: 100%;">
-                <div class="card-body">
-                    <h4 class="card-title">{{ hopital.nom }}</h4>
-                    <p class="card-text">{{ hopital.adresse }}</p>
-                    <a href="{% url 'demande_inscription' hopital.id %}" class="btn btn-primary btn-block">
-                        S’inscrire
-                    </a>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-</div>
-</center>
+<section class="content-stack hospital-page" data-reveal>
+    <section class="hospital-section-header">
+        <div>
+            <span class="eyebrow hospital-eyebrow">Administration</span>
+            <h1 class="section-title hospital-title">Gestion des hopitaux</h1>
+            <p class="section-subtitle hospital-subtitle">Retrouvez les etablissements confirmes, les structures en attente et les coordonnees utiles dans une presentation plus lisible.</p>
+        </div>
+        <a class="btn btn-secondary" href="{% url 'ajouter_hopital' %}">Ajouter un hopital</a>
+    </section>
+
+    <section class="table-card hospital-table-card">
+        <div class="hospital-table-banner">
+            <span class="hospital-banner-dot"></span>
+            <strong>Hopitaux confirmes</strong>
+            <span>Structures valides et rattachements administratifs</span>
+        </div>
+        <div class="table-wrap hospital-table-group">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Adresse</th>
+                        <th>Email</th>
+                        <th>Administrateur</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for hopital in hopitaux_confirmes %}
+                        <tr>
+                            <td>{{ hopital.nom }}</td>
+                            <td>{{ hopital.adresse }}</td>
+                            <td>{{ hopital.email|default:"Non renseigne" }}</td>
+                            <td>{{ hopital.admin.get_full_name|default:hopital.admin.email|default:"Non assigne" }}</td>
+                            <td><span class="status-pill approved">Confirme</span></td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="5">Aucun hopital confirme.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="table-card hospital-table-card secondary">
+        <div class="hospital-table-banner">
+            <span class="hospital-banner-dot amber"></span>
+            <strong>Hopitaux non confirmes</strong>
+            <span>Etablissements a suivre avant validation definitive</span>
+        </div>
+        <div class="table-wrap hospital-table-group">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Adresse</th>
+                        <th>Email</th>
+                        <th>Administrateur</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for hopital in hopitaux_non_confirmes %}
+                        <tr>
+                            <td>{{ hopital.nom }}</td>
+                            <td>{{ hopital.adresse }}</td>
+                            <td>{{ hopital.email|default:"Non renseigne" }}</td>
+                            <td>{{ hopital.admin.get_full_name|default:hopital.admin.email|default:"Non assigne" }}</td>
+                            <td><span class="status-pill pending">{{ hopital.get_statut_display }}</span></td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="5">Aucun hopital non confirme.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</section>
 {% endblock %}

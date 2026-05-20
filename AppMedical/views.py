@@ -12,10 +12,12 @@ from .models import *
 from django.http import HttpResponseForbidden, HttpResponse
 from django.template.loader import render_to_string
 import io
+import datetime
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
 from django.db.models import Q
+from django.utils.crypto import get_random_string
 
 
 @login_required
@@ -24,7 +26,9 @@ def dashboard_patient(request, patient_id):
         messages.error(request, "Accès interdit. Vous devez être un patient pour accéder à ce tableau de bord.")
         return redirect('index')
     patient = get_object_or_404(CustomUser, id=patient_id)
+    
     # Récupère la demande d'inscription pour le patient (s'il y en a une)
+    
     demande_inscription = DemandeInscription.objects.filter(patient__id=patient_id).first()
 
     # Si aucune demande, on laisse le patient accéder au dashboard et on affiche un message/CTA
@@ -60,31 +64,233 @@ def dashboard_patient(request, patient_id):
 def dashboard_medecin(request):
     return render(request, 'medecin/medecin.html')
 
+@login_required
+@user_passes_test(lambda u: u.is_superuser or u.role == 'admin_system')
 def dashboard_admin(request):
-    return render(request, 'hopital/dashboard_hopital.html')
+    hopitaux_total = Hopital.objects.count()
+    validations_en_attente = Hopital.objects.filter(statut='en_attente').count()
+    hopitaux_confirmes_total = Hopital.objects.filter(statut='confirme').count()
+    patients_total = CustomUser.objects.filter(role='patient').count()
+    livreurs_en_attente_total = Livreur.objects.filter(statut='en_attente').count()
+    hopitaux_valides = Hopital.objects.filter(statut='confirme').order_by('-created_at')[:5]
+    hopitaux_en_attente_liste = Hopital.objects.filter(statut='en_attente').order_by('-created_at')[:5]
+
+    user_roles_labels = {
+        'patient': 'Patient',
+        'medecin': 'Medecin',
+        'admin_hopital': 'Admin hopital',
+        'admin_system': 'Administrateur',
+        'livreur': 'Livreur',
+    }
+
+    recent_users = [
+        {
+            'type': 'utilisateur',
+            'icon_letter': 'U',
+            'icon_class': 'blue',
+            'title': user.get_full_name() or user.email or user.username,
+            'subtitle': user_roles_labels.get(user.role, 'Utilisateur'),
+            'created_at': user.created_at,
+            'status_text': 'nouveau',
+            'status_class': 'blue',
+        }
+        for user in CustomUser.objects.order_by('-created_at')[:8]
+    ]
+
+    recent_hospitals = [
+        {
+            'type': 'hopital',
+            'icon_letter': 'H',
+            'icon_class': 'green',
+            'title': hopital.nom,
+            'subtitle': 'Hopital en attente' if hopital.statut == 'en_attente' else 'Hopital valide',
+            'created_at': hopital.created_at,
+            'status_text': 'en attente' if hopital.statut == 'en_attente' else 'valide',
+            'status_class': 'amber' if hopital.statut == 'en_attente' else 'green',
+        }
+        for hopital in Hopital.objects.order_by('-created_at')[:8]
+    ]
+
+    recent_inscriptions = sorted(
+        recent_users + recent_hospitals,
+        key=lambda item: item['created_at'],
+        reverse=True,
+    )[:6]
+
+    return render(request, 'admin/dashboard_admin_principal.html', {
+        'hopitaux_total': hopitaux_total,
+        'validations_en_attente': validations_en_attente,
+        'hopitaux_confirmes_total': hopitaux_confirmes_total,
+        'patients_total': patients_total,
+        'livreurs_en_attente_total': livreurs_en_attente_total,
+        'hopitaux_valides': hopitaux_valides,
+        'hopitaux_en_attente_liste': hopitaux_en_attente_liste,
+        'recent_inscriptions': recent_inscriptions,
+    })
+
+@login_required
+@user_passes_test(lambda u: u.is_authenticated and (u.is_superuser or u.role == 'admin_system'))
+def liste_utilisateurs(request):
+    utilisateurs = CustomUser.objects.order_by('-created_at')
+    return render(request, 'admin/liste_utilisateurs.html', {
+        'utilisateurs': utilisateurs,
+    })
+
+@login_required
+@user_passes_test(lambda u: u.is_authenticated and (u.is_superuser or u.role == 'admin_system'))
+def basculer_statut_utilisateur(request, user_id):
+    utilisateur = get_object_or_404(CustomUser, id=user_id)
+
+    if utilisateur == request.user:
+        messages.warning(request, "Vous ne pouvez pas desactiver votre propre compte.")
+        return redirect('liste_utilisateurs')
+
+    utilisateur.is_active = not utilisateur.is_active
+    utilisateur.save(update_fields=['is_active'])
+
+    if utilisateur.is_active:
+        messages.success(request, f"Le compte de {utilisateur.get_full_name() or utilisateur.email} a ete reactive.")
+    else:
+        messages.success(request, f"Le compte de {utilisateur.get_full_name() or utilisateur.email} a ete desactive.")
+
+    return redirect('liste_utilisateurs')
+
+@login_required
+@user_passes_test(lambda u: u.is_authenticated and (u.is_superuser or u.role == 'admin_system'))
+def statistiques_admin(request):
+    total_utilisateurs = CustomUser.objects.count()
+    utilisateurs_actifs = CustomUser.objects.filter(is_active=True).count()
+    utilisateurs_inactifs = CustomUser.objects.filter(is_active=False).count()
+    total_patients = CustomUser.objects.filter(role='patient').count()
+    total_medecins = CustomUser.objects.filter(role='medecin').count()
+    total_admins_hopital = CustomUser.objects.filter(role='admin_hopital').count()
+    total_livreurs = CustomUser.objects.filter(role='livreur').count()
+    total_hopitaux = Hopital.objects.count()
+    hopitaux_confirmes = Hopital.objects.filter(statut='confirme').count()
+    hopitaux_en_attente = Hopital.objects.filter(statut='en_attente').count()
+    demandes_patients_en_attente = DemandeInscription.objects.filter(statut='en_attente').count()
+    rendez_vous_total = RendezVous.objects.count()
+    rendez_vous_en_attente = RendezVous.objects.filter(statut='en_attente').count()
+
+    return render(request, 'admin/statistiques.html', {
+        'total_utilisateurs': total_utilisateurs,
+        'utilisateurs_actifs': utilisateurs_actifs,
+        'utilisateurs_inactifs': utilisateurs_inactifs,
+        'total_patients': total_patients,
+        'total_medecins': total_medecins,
+        'total_admins_hopital': total_admins_hopital,
+        'total_livreurs': total_livreurs,
+        'total_hopitaux': total_hopitaux,
+        'hopitaux_confirmes': hopitaux_confirmes,
+        'hopitaux_en_attente': hopitaux_en_attente,
+        'demandes_patients_en_attente': demandes_patients_en_attente,
+        'rendez_vous_total': rendez_vous_total,
+        'rendez_vous_en_attente': rendez_vous_en_attente,
+    })
+
+@login_required
+@user_passes_test(lambda u: u.role == 'admin_hopital')
+def dashboard_admin_hopital(request):
+    hopital = Hopital.objects.filter(admin=request.user).first()
+    context = {
+        'hopital': hopital,
+        'total_medecins': 0,
+        'patients_valides': 0,
+        'rdv_en_attente': 0,
+        'rdv_valides': 0,
+        'rdv_stats_labels': [],
+        'rdv_stats_values': [],
+    }
+
+    if hopital:
+        rdv_en_attente = RendezVous.objects.filter(
+            hopital=hopital,
+            statut='en_attente'
+        ).count()
+
+        context.update({
+            'total_medecins': Medecin.objects.filter(hopital=hopital).count(),
+            'patients_valides': DemandeInscription.objects.filter(
+                hopital=hopital,
+                statut__in=['approuve', 'valide']
+            ).count(),
+            'rdv_en_attente': rdv_en_attente,
+            'rdv_valides': RendezVous.objects.filter(
+                hopital=hopital,
+                medecin__isnull=False,
+                statut__in=['approuvé', 'validee']
+            ).count(),
+        })
+
+        today = datetime.date.today()
+        current_week_start = today - datetime.timedelta(days=today.weekday())
+        week_labels = []
+        week_counts = []
+
+        for offset in range(3, -1, -1):
+            start_of_week = current_week_start - datetime.timedelta(weeks=offset)
+            end_of_week = start_of_week + datetime.timedelta(days=6)
+            week_label = f"S{start_of_week.isocalendar()[1]} ({start_of_week.strftime('%d/%m')} - {end_of_week.strftime('%d/%m')})"
+            count = RendezVous.objects.filter(
+                hopital=hopital,
+                date__gte=start_of_week,
+                date__lte=end_of_week
+            ).count()
+            week_labels.append(week_label)
+            week_counts.append(count)
+
+        context.update({
+            'rdv_stats_labels': week_labels,
+            'rdv_stats_values': week_counts,
+        })
+
+    return render(request, 'hopital/dashboard_hopital.html', context)
+
+def dashboard_livreur(request):
+    return render(request, 'livreur/dashboard_livreur.html')
 
 def index(request): 
     return render(request, 'accueil/index.html')  
 
-def inscription_view(request):
+def inscription_patient(request):
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST, request.FILES)
+        form = PatientRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
             login(request, user)
-            messages.success(request, "Inscription réussie ! Bienvenue.")
-            role = getattr(user, 'role', None)
-            if role == 'patient':
-                return redirect('dashboard_patient', patient_id=user.id)
-            elif role == 'medecin':
-                return redirect('dashboard_medecin')
-            else:
-                return redirect('dashboard_admin')
+            messages.success(request, "Inscription patient réussie ! Bienvenue.")
+            return redirect('dashboard_patient', patient_id=user.id)
         else:
             messages.error(request, "Erreur dans le formulaire.")
     else:
-        form = CustomUserCreationForm()
-    return render(request, 'registration/inscription.html', {'form': form})
+        form = PatientRegistrationForm()
+    return render(request, 'registration/inscription_patient.html', {'form': form})
+
+def inscription_hopital(request):
+    if request.method == 'POST':
+        form = HospitalRegistrationForm(request.POST, request.FILES)
+        if form.is_valid():
+            hopital = form.save()
+            messages.success(request, "Demande d'inscription d'hôpital soumise. En attente de confirmation.")
+            return redirect('index')
+        else:
+            messages.error(request, "Erreur dans le formulaire.")
+    else:
+        form = HospitalRegistrationForm()
+    return render(request, 'registration/inscription_hopital.html', {'form': form})
+
+def inscription_livreur(request):
+    if request.method == 'POST':
+        form = LivreurRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            messages.success(request, "Demande d'emploi livreur soumise. En attente de validation.")
+            return redirect('index')
+        else:
+            messages.error(request, "Erreur dans le formulaire.")
+    else:
+        form = LivreurRegistrationForm()
+    return render(request, 'registration/inscription_livreur.html', {'form': form})
 
 
 def connexion_view(request):
@@ -95,12 +301,20 @@ def connexion_view(request):
             login(request, user)
             role = user.role
 
-            if role == 'patient':
+            if user.is_superuser:
+                return redirect('dashboard_admin')
+            elif role == 'patient':
                 return redirect('dashboard_patient', patient_id=user.id)
             elif role == 'medecin':
                 return redirect('dashboard_medecin')
-            else:
+            elif role == 'admin_system':
                 return redirect('dashboard_admin')
+            elif role == 'admin_hopital':
+                return redirect('dashboard_admin_hopital')
+            elif role == 'livreur':
+                return redirect('dashboard_livreur')
+            else:
+                return redirect('index')
         else:
             messages.error(request, "Identifiants invalides.")
     else:
@@ -111,11 +325,14 @@ def deconnexion_view(request):
     logout(request)
     return redirect('index')
 
-def is_admin(user):
-    return user.is_superuser or user.role == 'admin'
+def is_admin_principal(user):
+    return user.is_authenticated and (user.is_superuser or user.role == 'admin_system')
+
+def is_admin_hopital(user):
+    return user.is_authenticated and user.role == 'admin_hopital'
 
 @login_required
-@user_passes_test(is_admin)
+@user_passes_test(is_admin_principal)
 def ajouter_hopital(request):
     if request.method == 'POST':
         form = HopitalForm(request.POST)
@@ -132,9 +349,107 @@ def liste_hopitaux(request):
     return render(request, 'hopital/hopitaux.html', {'hopitaux': hopitaux})
 
 @login_required
+@user_passes_test(is_admin_principal)
 def liste_hopitaux_admin(request):
-    hopitaux = Hopital.objects.all()
-    return render(request, 'hopital/hopitaux_admin.html', {'hopitaux': hopitaux})
+    hopitaux_confirmes = Hopital.objects.filter(statut='confirme').order_by('nom')
+    hopitaux_non_confirmes = Hopital.objects.exclude(statut='confirme').order_by('nom')
+    return render(request, 'hopital/hopitaux_admin.html', {
+        'hopitaux_confirmes': hopitaux_confirmes,
+        'hopitaux_non_confirmes': hopitaux_non_confirmes,
+    })
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def hopitaux_en_attente(request):
+    hopitaux = Hopital.objects.filter(statut='en_attente')
+    return render(request, 'admin/hopitaux_en_attente.html', {'hopitaux': hopitaux})
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def confirmer_hopital(request, hopital_id):
+    hopital = get_object_or_404(Hopital, id=hopital_id)
+    email_hopital = (hopital.email or "").strip().lower()
+    admin_user = hopital.admin
+    mot_de_passe_temporaire = None
+
+    if not email_hopital:
+        messages.error(request, "Impossible de confirmer cet hopital sans email de contact.")
+        return redirect('hopitaux_en_attente')
+
+    if admin_user is None:
+        utilisateur_existant = CustomUser.objects.filter(email__iexact=email_hopital).first()
+
+        if utilisateur_existant:
+            if utilisateur_existant.role != 'admin_hopital':
+                messages.error(
+                    request,
+                    "Un utilisateur existe deja avec cet email, mais il n'est pas administrateur d'hopital."
+                )
+                return redirect('hopitaux_en_attente')
+            admin_user = utilisateur_existant
+        else:
+            mot_de_passe_temporaire = get_random_string(12)
+            admin_user = CustomUser(
+                username=email_hopital,
+                email=email_hopital,
+                role='admin_hopital',
+                first_name=hopital.directeur or hopital.nom,
+            )
+            admin_user.set_password(mot_de_passe_temporaire)
+            admin_user.save()
+
+        hopital.admin = admin_user
+
+    hopital.statut = 'confirme'
+    hopital.save()
+
+    sujet = "Confirmation de votre inscription hopital"
+    if mot_de_passe_temporaire:
+        message = f"""Bonjour,
+
+L'inscription de l'hopital {hopital.nom} a ete confirmee.
+
+Voici vos identifiants de connexion :
+Identifiant : {admin_user.email}
+Mot de passe temporaire : {mot_de_passe_temporaire}
+
+Merci de vous connecter puis de modifier votre mot de passe depuis votre compte.
+"""
+    else:
+        message = f"""Bonjour,
+
+L'inscription de l'hopital {hopital.nom} a ete confirmee.
+
+Votre compte administrateur est associe a cette adresse :
+Identifiant : {admin_user.email}
+
+Vous pouvez vous connecter avec vos identifiants habituels et modifier votre mot de passe apres connexion.
+"""
+
+    try:
+        send_mail(sujet, message, settings.DEFAULT_FROM_EMAIL, [email_hopital])
+        messages.success(request, f"Hopital {hopital.nom} confirme et email envoye.")
+    except Exception:
+        messages.warning(
+            request,
+            f"Hopital {hopital.nom} confirme, mais l'email n'a pas pu etre envoye."
+        )
+    return redirect('hopitaux_en_attente')
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def livreurs_en_attente(request):
+    livreurs = Livreur.objects.filter(statut='en_attente')
+    return render(request, 'admin/livreurs_en_attente.html', {'livreurs': livreurs})
+
+@login_required
+@user_passes_test(lambda u: u.is_superuser)
+def activer_livreur(request, livreur_id):
+    livreur = get_object_or_404(Livreur, id=livreur_id)
+    livreur.statut = 'actif'
+    livreur.save()
+    messages.success(request, f"Livreur {livreur.user.get_full_name()} activé.")
+    return redirect('livreurs_en_attente')
 
 @login_required
 def demander_inscription(request, hopital_id):
@@ -155,16 +470,16 @@ def demander_inscription(request, hopital_id):
 
 
 @login_required
-@user_passes_test(lambda u: u.is_superuser or u.role == 'admin') 
+@user_passes_test(is_admin_hopital) 
 def liste_demandes_en_attente(request):
-    demandes = DemandeInscription.objects.filter(approuvee__isnull=True)
+    demandes = DemandeInscription.objects.filter(statut='en_attente')
     return render(request, 'admin/attente.html', {'demandes': demandes})
 
 @login_required
-@user_passes_test(lambda u: u.is_superuser or u.role == 'admin')
+@user_passes_test(is_admin_hopital)
 def approuver_demande(request, demande_id):
     demande = get_object_or_404(DemandeInscription, id=demande_id)
-    demande.approuvee = True
+    demande.statut = 'approuve'
     demande.save()
 
     # Création automatique du dossier médical si pas déjà existant
@@ -183,10 +498,10 @@ def approuver_demande(request, demande_id):
 
 
 @login_required
-@user_passes_test(lambda u: u.is_superuser or u.role == 'admin')
+@user_passes_test(is_admin_hopital)
 def refuser_demande(request, demande_id):
     demande = get_object_or_404(DemandeInscription, id=demande_id)
-    demande.approuvee = False
+    demande.statut = 'refuse'
     demande.save()
     messages.warning(request, "Demande refusée.")
     return redirect('liste_demandes_en_attente')
@@ -197,12 +512,12 @@ def demandes_validees(request):
 
     if user.is_superuser:
         # Le superuser voit toutes les demandes validées
-        demandes = DemandeInscription.objects.filter(approuvee=True)
-    elif user.role == 'admin':
+        demandes = DemandeInscription.objects.filter(statut__in=['approuve', 'valide'])
+    elif user.role == 'admin_hopital':
         try:
             # Récupère l'hôpital de l'admin connecté
             hopital_admin = Hopital.objects.get(admin=user)
-            demandes = DemandeInscription.objects.filter(approuvee=True, hopital=hopital_admin)
+            demandes = DemandeInscription.objects.filter(statut__in=['approuve', 'valide'], hopital=hopital_admin)
         except Hopital.DoesNotExist:
             # L'admin n'a pas encore d'hôpital lié
             demandes = []
@@ -253,19 +568,19 @@ def modifier_personne(request, personne_id):
 def ajouter_medecin(request):
     if not request.user.is_authenticated:
         return redirect('connexion')
-    if not (request.user.is_superuser or request.user.role == 'admin'):
+    if not is_admin_hopital(request.user):
         messages.error(request, "Acces refuse: vous devez etre admin pour ajouter un medecin.")
         return redirect('index')
 
     hopital_admin = Hopital.objects.filter(admin=request.user).first()
     if not hopital_admin:
         messages.error(request, "Aucun hopital n'est associe a votre compte admin.")
-        return redirect('dashboard_admin')
+        return redirect('dashboard_admin_hopital')
 
     if request.method == 'POST':
         form = MedecinCreationForm(request.POST)
         if form.is_valid():
-            user, password = form.save(hopital=hopital_admin)   
+            user, password, medecin = form.save(hopital=hopital_admin)
             messages.success(request, "Médecin enregistré avec succès.")
             return redirect('liste_medecins')
     else:
@@ -276,7 +591,7 @@ def ajouter_medecin(request):
 def envoyer_identifiants(request, medecin_id):
     if not request.user.is_authenticated:
         return redirect('connexion')
-    if not (request.user.is_superuser or request.user.role == 'admin'):
+    if not is_admin_hopital(request.user):
         messages.error(request, "Acces refuse: vous devez etre admin pour envoyer les identifiants.")
         return redirect('index')
 
@@ -313,16 +628,49 @@ Merci de vous connecter et de changer votre mot de passe dès la première conne
 @login_required     
 def liste_medecins(request):
     hopital_admin = Hopital.objects.filter(admin=request.user).first()
+    search = request.GET.get('q', '').strip()
+    specialite = request.GET.get('specialite', '').strip()
+    statut = request.GET.get('statut', 'actif').strip()
 
     if not hopital_admin:
         return render(request, 'medecin/liste_medecins.html', {
             'medecins': [],
+            'specialites': [],
+            'current_search': search,
+            'current_specialite': specialite,
+            'current_statut': statut,
             'empty_message': "Aucun médecin associé à cet hôpital pour le moment."
         })
 
     medecins = Medecin.objects.filter(hopital=hopital_admin)
+    specialites = (
+        medecins.exclude(specialite='')
+        .order_by('specialite')
+        .values_list('specialite', flat=True)
+        .distinct()
+    )
+
+    if search:
+        medecins = medecins.filter(
+            Q(user__first_name__icontains=search)
+            | Q(user__last_name__icontains=search)
+            | Q(user__email__icontains=search)
+            | Q(user__username__icontains=search)
+        )
+
+    if specialite:
+        medecins = medecins.filter(specialite=specialite)
+
+    if statut == 'inactif':
+        medecins = medecins.filter(user__is_active=False)
+    elif statut == 'actif':
+        medecins = medecins.filter(user__is_active=True)
     return render(request, 'medecin/liste_medecins.html', {
         'medecins': medecins,
+        'specialites': specialites,
+        'current_search': search,
+        'current_specialite': specialite,
+        'current_statut': statut,
         'empty_message': "Aucun médecin associé à cet hôpital pour le moment." if not medecins.exists() else "",
     })
 
@@ -332,7 +680,7 @@ def liste_rendezvous_hopital(request):
         hopital_admin = Hopital.objects.get(admin=request.user)
     except Hopital.DoesNotExist:
         messages.error(request, "Aucun hôpital associé à cet administrateur.")
-        return redirect('dashboard_admin')
+        return redirect('dashboard_admin_hopital')
 
     rendez_vous = RendezVous.objects.filter(hopital=hopital_admin, statut='en_attente')
     return render(request, 'rendez-vous/liste_rendezvous.html', {'rendez_vous': rendez_vous})
@@ -400,8 +748,16 @@ def modifier_profil_patient(request):
 
 @login_required
 def prendre_rendez_vous(request):
+    hopitaux_valides = Hopital.objects.filter(
+        id__in=DemandeInscription.objects.filter(
+            patient=request.user,
+            statut__in=['approuve', 'valide']
+        ).values_list('hopital_id', flat=True)
+    )
+
     if request.method == 'POST':
         form = RendezVousForm(request.POST, user=request.user)
+        form.fields['hopital'].queryset = hopitaux_valides
         if form.is_valid():
             rdv = form.save(commit=False)
             rdv.patient = request.user
@@ -410,6 +766,7 @@ def prendre_rendez_vous(request):
             return redirect('liste_rendez_vous')
     else:
         form = RendezVousForm(user=request.user)
+        form.fields['hopital'].queryset = hopitaux_valides
     return render(request, 'rendez-vous/prendre_rendez_vous.html', {'form': form})
 
 
@@ -425,14 +782,14 @@ def liste_rendezvous_hopital(request):
         hopital_admin = Hopital.objects.get(admin=request.user)
     except Hopital.DoesNotExist:
         messages.error(request, "Aucun hôpital associé à cet administrateur.")
-        return redirect('dashboard_admin')
+        return redirect('dashboard_admin_hopital')
 
     rendez_vous = RendezVous.objects.filter(hopital=hopital_admin, statut='en_attente')
     return render(request, 'rendez_vous/liste_rendezvous.html', {'rendez_vous': rendez_vous})
 
 
 @login_required
-@user_passes_test(is_admin)
+@user_passes_test(is_admin_hopital)
 def valider_rdv(request, rdv_id):
     rdv = get_object_or_404(RendezVous, id=rdv_id)
 
@@ -465,11 +822,8 @@ def refuser_rdv(request, rdv_id):
     return redirect('liste_rendezvous_hopital')
 
 
-def is_admin(user):
-    return user.is_authenticated and user.role == 'admin'
-
 @login_required
-@user_passes_test(is_admin)
+@user_passes_test(is_admin_hopital)
 def assign_patients_to_medecin(request, medecin_id):
     medecin = get_object_or_404(Medecin, id=medecin_id)
 
@@ -482,7 +836,7 @@ def assign_patients_to_medecin(request, medecin_id):
         role='patient',
         id__in=DemandeInscription.objects.filter(
             hopital=medecin.hopital,
-            approuvee=True
+            statut__in=['approuve', 'valide']
         ).values_list('patient_id', flat=True)
     )
 
@@ -548,7 +902,7 @@ def voir_dossier_medical(request, patient_id):
         # Ici on ne permet pas la modif par défaut
         peut_modifier = False
 
-    elif request.user.role == 'admin':
+    elif request.user.role == 'admin_hopital':
         base_template = "hopital/base_admin_hopital.html"
         peut_modifier = True
 
@@ -593,7 +947,7 @@ def modifier_dossier_medical(request, patient_id):
         if hasattr(dossier, "medecin") and dossier.medecin != request.user:
             messages.error(request, "Vous n'êtes pas autorisé à modifier ce dossier.")
             return redirect("voir_dossier_medical", patient_id=patient_id)
-    elif request.user.role != "admin":
+    elif request.user.role != "admin_hopital":
         messages.error(request, "Vous n'êtes pas autorisé à modifier ce dossier.")
         return redirect("voir_dossier_medical", patient_id=patient_id)
 
@@ -771,17 +1125,22 @@ def telecharger_ordonnance(request, ordonnance_id):
 @login_required
 def liste_rendezvous_valides(request):
     user = request.user
+    statuts_valides = ['approuvé', 'approuvÃ©', 'validee']
 
-    if user.role == 'admin':
+    if user.role == 'admin_hopital':
         # On récupère l'hôpital de l'admin
         try:
             hopital = Hopital.objects.get(admin=user)
         except Hopital.DoesNotExist:
             messages.error(request, "Aucun hôpital associé à cet administrateur.")
-            return redirect('dashboard_admin')
+            return redirect('dashboard_admin_hopital')
 
         # RDV validés pour cet hôpital
-        rdvs = RendezVous.objects.filter(hopital=hopital, statut='approuvé').order_by('date', 'heure')
+        rdvs = RendezVous.objects.filter(
+            hopital=hopital,
+            medecin__isnull=False,
+            statut__in=statuts_valides
+        ).order_by('date', 'heure')
 
     elif user.role == 'medecin':
         # RDV validés attribués au médecin connecté
@@ -791,7 +1150,10 @@ def liste_rendezvous_valides(request):
             messages.error(request, "Vous n'êtes pas un médecin reconnu.")
             return redirect('dashboard_medecin')
 
-        rdvs = RendezVous.objects.filter(medecin=medecin, statut='approuvé').order_by('date', 'heure')
+        rdvs = RendezVous.objects.filter(
+            medecin=medecin,
+            statut__in=statuts_valides
+        ).order_by('date', 'heure')
 
     else:
         messages.error(request, "Accès interdit.")
@@ -810,7 +1172,10 @@ def liste_rendezvous_medecin(request):
         return redirect('index')
 
     # On récupère les rendez-vous validés attribués à ce médecin
-    rdvs = RendezVous.objects.filter(medecin=medecin, statut='approuvé').order_by('date', 'heure')
+    rdvs = RendezVous.objects.filter(
+        medecin=medecin,
+        statut__in=['approuvé', 'approuvÃ©', 'validee']
+    ).order_by('date', 'heure')
 
     return render(request, 'medecin/liste_rendezvous_medecin.html', {
         'medecin': medecin,  

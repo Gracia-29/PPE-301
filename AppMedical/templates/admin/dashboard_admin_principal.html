@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard admin principal{% endblock %}
+{% block body_attrs %}class="dashboard-ui admin-dashboard admin-master-page"{% endblock %}
+{% block content %}
+<section class="dashboard-wrap admin-master-dashboard" data-reveal>
+    <header class="dashboard-header admin-master-header">
+        <div class="admin-master-heading">
+            <h1>Administration principale</h1>
+            <p>Pilotez les validations, les structures hospitalieres et les flux globaux de la plateforme.</p>
+        </div>
+        <div class="admin-master-toolbar">
+            <a class="admin-master-alert" href="{% url 'liste_demandes_en_attente' %}" aria-label="Voir les elements en attente">
+                <span class="admin-master-alert-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M15 18H9m9-2V11a6 6 0 1 0-12 0v5l-1 2h14l-1-2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M10.5 20a1.5 1.5 0 0 0 3 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                </span>
+                <span class="admin-master-alert-badge">{{ validations_en_attente }}</span>
+            </a>
+        </div>
+    </header>
+
+    <section class="dashboard-stats four">
+        <article class="dash-stat-card admin-stat-card admin-stat-card-blue">
+            <div class="admin-stat-top">
+                <span class="dash-icon blue" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M4 21h16M7 21V6h10v15M10 9h1M13 9h1M10 12h1M13 12h1M10 15h1M13 15h1" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M9 21v-3h6v3" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg>
+                </span>
+                <span class="admin-stat-chip">HP</span>
+            </div>
+            <div class="dash-stat-value">{{ hopitaux_total }}</div>
+            <div class="dash-stat-label">Hopitaux enregistres</div>
+            <span class="admin-stat-arrow">&rsaquo;</span>
+        </article>
+        <article class="dash-stat-card admin-stat-card admin-stat-card-mint">
+            <div class="admin-stat-top">
+                <span class="dash-icon mint" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M12 3 5 6v5c0 4.2 2.8 8.12 7 9 4.2-.88 7-4.8 7-9V6l-7-3Z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="m9.5 11.5 1.8 1.8 3.2-3.8" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </span>
+                <span class="admin-stat-chip">VAL</span>
+            </div>
+            <div class="dash-stat-value">{{ validations_en_attente }}</div>
+            <div class="dash-stat-label">Hopitaux en attente</div>
+            <span class="admin-stat-arrow">&rsaquo;</span>
+        </article>
+        <article class="dash-stat-card admin-stat-card admin-stat-card-amber">
+            <div class="admin-stat-top">
+                <span class="dash-icon amber" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M16 19a4 4 0 0 0-8 0" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><circle cx="12" cy="9" r="3.5" stroke="currentColor" stroke-width="1.9"/><path d="M20 17a3 3 0 0 0-2.5-2.96M4 17a3 3 0 0 1 2.5-2.96" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+                </span>
+                <span class="admin-stat-chip">PAT</span>
+            </div>
+            <div class="dash-stat-value">{{ patients_total }}</div>
+            <div class="dash-stat-label">Utilisateurs patients</div>
+            <span class="admin-stat-arrow">&rsaquo;</span>
+        </article>
+        <article class="dash-stat-card admin-stat-card admin-stat-card-violet">
+            <div class="admin-stat-top">
+                <span class="dash-icon violet" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none"><path d="M3 7h11v9H3zM14 10h3l3 3v3h-6z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><circle cx="8" cy="18" r="2" stroke="currentColor" stroke-width="1.9"/><circle cx="18" cy="18" r="2" stroke="currentColor" stroke-width="1.9"/></svg>
+                </span>
+                <span class="admin-stat-chip">LIV</span>
+            </div>
+            <div class="dash-stat-value">{{ livreurs_en_attente_total }}</div>
+            <div class="dash-stat-label">Livreurs en attente</div>
+            <span class="admin-stat-arrow">&rsaquo;</span>
+        </article>
+    </section>
+
+    <section class="dash-panel admin-recent-panel">
+        <div class="dash-panel-head">
+            <h3>Inscriptions recentes</h3>
+            <a href="{% url 'liste_demandes_en_attente' %}" class="dash-panel-link">Voir tout</a>
+        </div>
+        <div class="dash-panel-body">
+            {% for item in recent_inscriptions %}
+                <article class="admin-recent-item">
+                    <div class="admin-recent-main">
+                        <span class="dash-avatar {{ item.icon_class }}">{{ item.icon_letter }}</span>
+                        <div class="admin-recent-copy">
+                            <strong>{{ item.title }}</strong>
+                            <span>{{ item.subtitle }}</span>
+                        </div>
+                    </div>
+                    <div class="admin-recent-meta">
+                        <time datetime="{{ item.created_at|date:'c' }}">{{ item.created_at|date:"j M Y" }}</time>
+                        <span class="admin-recent-badge {{ item.status_class }}">{{ item.status_text }}</span>
+                    </div>
+                </article>
+            {% empty %}
+                <div class="dash-empty">Aucune inscription recente pour le moment.</div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <section class="dashboard-grid two-up">
+        <article class="panel">
+            <div class="dash-panel-head">
+                <h3>Hopitaux valides</h3>
+                <a href="{% url 'liste_hopitaux_admin' %}" class="dash-panel-link">Voir tout</a>
+            </div>
+            <div class="detail-list admin-hospital-list">
+                {% for hopital in hopitaux_valides %}
+                    <div class="list-card">
+                        <strong>{{ hopital.nom }}</strong>
+                        <span>
+                            {{ hopital.ville|default:"Ville non renseignee" }}
+                            {% if hopital.type %} · {{ hopital.get_type_display }}{% endif %}
+                        </span>
+                    </div>
+                {% empty %}
+                    <div class="dash-empty">Aucun hopital valide pour le moment.</div>
+                {% endfor %}
+            </div>
+        </article>
+
+        <article class="panel">
+            <div class="dash-panel-head">
+                <h3>Hopitaux en attente</h3>
+                <a href="{% url 'hopitaux_en_attente' %}" class="dash-panel-link">Voir tout</a>
+            </div>
+            <div class="detail-list admin-hospital-list">
+                {% for hopital in hopitaux_en_attente_liste %}
+                    <div class="list-card">
+                        <strong>{{ hopital.nom }}</strong>
+                        <span>
+                            {{ hopital.ville|default:"Ville non renseignee" }}
+                            {% if hopital.directeur %} · {{ hopital.directeur }}{% endif %}
+                        </span>
+                    </div>
+                {% empty %}
+                    <div class="dash-empty">Aucun hopital en attente actuellement.</div>
+                {% endfor %}
+            </div>
+        </article>
+    </section>
+</section>
+{% endblock %}

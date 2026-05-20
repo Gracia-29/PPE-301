@@ -1,0 +1,23 @@
+{% load widget_tweaks %}
+{% for hidden in form.hidden_fields %}
+    {{ hidden }}
+{% endfor %}
+<div class="form-grid">
+    {% for field in form.visible_fields %}
+        <div class="field-group{% if field.errors %} has-errors{% endif %}" data-field-group>
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field|add_class:'frontend-field js-form-input'|attr:'data-form-input:true' }}
+            {% if field.help_text %}
+                <div class="field-help" data-field-help>{{ field.help_text }}</div>
+            {% endif %}
+            {% for error in field.errors %}
+                <div class="field-error">{{ error }}</div>
+            {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+{% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+        <div class="field-error">{{ error }}</div>
+    {% endfor %}
+{% endif %}

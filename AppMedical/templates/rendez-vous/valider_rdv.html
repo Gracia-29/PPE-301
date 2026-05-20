@@ -1,16 +1,52 @@
-{% extends 'dashboard/base_admin.html' %}
-
+{% extends 'base.html' %}
+{% block title %}Valider un rendez-vous{% endblock %}
+{% block body_attrs %}class="dashboard-ui admin-dashboard hospital-master-page"{% endblock %}
 {% block content %}
-<h2>Valider Rendez-vous</h2>
+<section class="content-stack hospital-page" data-reveal>
+    <section class="hospital-section-header">
+        <div>
+            <span class="eyebrow hospital-eyebrow">Rendez-vous</span>
+            <h1 class="section-title hospital-title">Valider un rendez-vous</h1>
+            <p class="section-subtitle hospital-subtitle">Attribuez un medecin et confirmez la consultation pour le patient.</p>
+        </div>
+        <span class="hospital-summary-pill">Validation</span>
+    </section>
 
-<p>Patient : {{ rdv.patient.get_full_name }}</p>
-<p>Date : {{ rdv.date }}</p>
-<p>Heure : {{ rdv.heure }}</p>
+    <section class="dashboard-grid two-up hospital-form-grid">
+        <article class="panel hospital-info-panel" data-reveal>
+            <span class="eyebrow hospital-local-eyebrow">Demande patient</span>
+            <h2 class="section-title">Attribuer un medecin</h2>
+            <div class="detail-list">
+                <div class="list-card">
+                    <strong>Patient</strong>
+                    <span>{{ rdv.patient.get_full_name|default:rdv.patient.username }}</span>
+                </div>
+                <div class="list-card">
+                    <strong>Date</strong>
+                    <span>{{ rdv.date|date:"d/m/Y" }} a {{ rdv.heure|time:"H:i" }}</span>
+                </div>
+                <div class="list-card">
+                    <strong>Motif</strong>
+                    <span>{{ rdv.motif|default:"Sans motif detaille." }}</span>
+                </div>
+            </div>
+        </article>
 
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit" class="btn btn-success">Valider</button>
-  <a href="{% url 'liste_rendezvous_hopital' %}" class="btn btn-secondary">Annuler</a>
-</form>
+        <article class="table-card hospital-table-card" data-reveal>
+            <div class="hospital-table-banner">
+                <span class="hospital-banner-dot amber"></span>
+                <strong>Decision</strong>
+                <span>Choisissez le medecin et finalisez la demande.</span>
+            </div>
+            <form method="post" class="form-layout hospital-form-panel">
+                {% csrf_token %}
+                {% include 'includes/form_fields.html' with form=form %}
+                <div class="button-row hospital-button-row">
+                    <button type="submit" class="btn btn-primary">Valider le rendez-vous</button>
+                    <a class="btn btn-danger" href="{% url 'refuser_rdv' rdv.id %}">Refuser</a>
+                </div>
+            </form>
+        </article>
+    </section>
+</section>
 {% endblock %}

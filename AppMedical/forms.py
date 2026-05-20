@@ -1,83 +1,198 @@
 # forms.py
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import *
-from django.contrib.auth import authenticate
 from django.core.exceptions import ValidationError
+from django.db import transaction
 from django.forms import inlineformset_factory
 
-class CustomUserCreationForm(UserCreationForm):
+from .models import *
+
+
+class PatientRegistrationForm(UserCreationForm):
     class Meta:
         model = CustomUser
         fields = [
-            'username', 'first_name', 'last_name',
-            'email', 'password1', 'password2',
-            'role', 'genre', 'telephone', 'adresse',
-            'date_naissance', 'photo',
+            'first_name', 'last_name', 'email', 'password1', 'password2',
+            'genre', 'telephone', 'date_naissance'
         ]
         widgets = {
             'date_naissance': forms.DateInput(attrs={'type': 'date'}),
-            'adresse': forms.Textarea(attrs={'rows': 1}),
-            'telephone': forms.TextInput(attrs={'type': 'tel', 'pattern': '(^[0-9]{8}$)|(^\\+228[0-9]{8}$)'}),    
-            'photo': forms.ClearableFileInput(attrs={'accept': 'image/*'}), 
-            'role': forms.Select(attrs={'class': 'form-select'}),
+            'telephone': forms.TextInput(attrs={'type': 'tel'}),
             'genre': forms.Select(attrs={'class': 'form-select'}),
-            'username': forms.TextInput(attrs={'placeholder': 'Nom d’utilisateur'}),
-            'first_name': forms.TextInput(attrs={'placeholder': 'Prénom'}),
+            'first_name': forms.TextInput(attrs={'placeholder': 'Prenom'}),
             'last_name': forms.TextInput(attrs={'placeholder': 'Nom'}),
-            'email': forms.EmailInput(attrs={'placeholder': 'Email'}),  
+            'email': forms.EmailInput(attrs={'placeholder': 'Email'}),
             'password1': forms.PasswordInput(attrs={'placeholder': 'Mot de passe'}),
-            'password2': forms.PasswordInput(attrs={'placeholder': 'Confirmer le mot de passe'}), 
+            'password2': forms.PasswordInput(attrs={'placeholder': 'Confirmer le mot de passe'}),
         }
 
     def save(self, commit=True):
         user = super().save(commit=False)
+        user.username = self.cleaned_data['email']
+        user.role = 'patient'
         user.telephone = self.cleaned_data.get('telephone')
-        user.adresse = self.cleaned_data.get('adresse')
         user.date_naissance = self.cleaned_data.get('date_naissance')
         user.genre = self.cleaned_data.get('genre')
-        user.role = self.cleaned_data.get('role')
-        user.photo = self.cleaned_data.get('photo')
 
         if commit:
             user.save()
         return user
 
 
+class LivreurRegistrationForm(UserCreationForm):
+    permis_conduire = forms.CharField(max_length=50, required=False, label='Type de permis de conduire')
+    vehicule = forms.CharField(max_length=100, required=False, label='Type de vehicule')
+    zone_livraison = forms.CharField(max_length=100, required=False, label='Zone de livraison preferee')
 
-class CustomLoginForm(forms.Form):
-    username = forms.CharField(max_length=150, required=True)
-    password = forms.CharField(widget=forms.PasswordInput, required=True)
+    class Meta:
+        model = CustomUser
+        fields = [
+            'first_name', 'last_name', 'email', 'password1', 'password2',
+            'telephone', 'adresse'
+        ]
+        widgets = {
+            'telephone': forms.TextInput(attrs={'type': 'tel'}),
+            'adresse': forms.Textarea(attrs={'rows': 2}),
+            'first_name': forms.TextInput(attrs={'placeholder': 'Prenom'}),
+            'last_name': forms.TextInput(attrs={'placeholder': 'Nom'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'Email'}),
+            'password1': forms.PasswordInput(attrs={'placeholder': 'Mot de passe'}),
+            'password2': forms.PasswordInput(attrs={'placeholder': 'Confirmer le mot de passe'}),
+        }
 
-    def __init__(self, request, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.request = request
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.username = self.cleaned_data['email']
+        user.role = 'livreur'
 
-    def clean(self):
-        cleaned_data = super().clean()
-        username = cleaned_data.get('username')
-        password = cleaned_data.get('password')
+        if commit:
+            user.save()
+            Livreur.objects.create(
+                user=user,
+                permis_conduire=self.cleaned_data.get('permis_conduire'),
+                vehicule=self.cleaned_data.get('vehicule'),
+                zone_livraison=self.cleaned_data.get('zone_livraison'),
+                statut='en_attente'
+            )
+        return user
 
-        if username and password:
-            user = authenticate(self.request, username=username, password=password)
-            if user is None:
-                raise forms.ValidationError("Nom d'utilisateur ou mot de passe invalide.")
-            self.user = user
-        return cleaned_data
 
-    def get_user(self):
-        return self.user
-    
-class HopitalForm(forms.ModelForm):
+class HospitalRegistrationForm(forms.ModelForm):
     class Meta:
         model = Hopital
-        fields = ['nom', 'adresse', 'admin']
-        widgets = {
-            'nom': forms.TextInput(attrs={'class': 'form-control'}),
-            'adresse': forms.TextInput(attrs={'class': 'form-control'}),
-            'admin': forms.Select(attrs={'class': 'form-select'}),
+        fields = [
+            'nom',
+            'type',
+            'numero_enregistrement',
+            'nif',
+            'licence',
+            'date_expiration',
+            'adresse',
+            'ville',
+            'telephone',
+            'email',
+            'directeur',
+        ]
+        labels = {
+            'numero_enregistrement': "Numero d'enregistrement",
+            'date_expiration': "Date d'expiration",
         }
-    
+        widgets = {
+            'nom': forms.TextInput(attrs={'placeholder': "Nom de l'hopital"}),
+            'type': forms.Select(),
+            'numero_enregistrement': forms.TextInput(attrs={'placeholder': "Numero d'enregistrement"}),
+            'nif': forms.TextInput(attrs={'placeholder': 'NIF'}),
+            'licence': forms.ClearableFileInput(attrs={'accept': '.pdf,application/pdf'}),
+            'date_expiration': forms.DateInput(attrs={'type': 'date'}),
+            'adresse': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Adresse'}),
+            'ville': forms.TextInput(attrs={'placeholder': 'Ville'}),
+            'telephone': forms.TextInput(attrs={'type': 'tel', 'placeholder': 'Telephone'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'Email'}),
+            'directeur': forms.TextInput(attrs={'placeholder': 'Directeur'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        for field_name in [
+            'nom',
+            'type',
+            'numero_enregistrement',
+            'nif',
+            'licence',
+            'date_expiration',
+            'adresse',
+            'ville',
+            'telephone',
+            'email',
+            'directeur',
+        ]:
+            self.fields[field_name].required = True
+
+    def clean_licence(self):
+        licence = self.cleaned_data.get('licence')
+        if licence and not licence.name.lower().endswith('.pdf'):
+            raise ValidationError("La licence doit etre un fichier PDF.")
+        return licence
+
+    def save(self, commit=True):
+        hopital = super().save(commit=False)
+        hopital.statut = 'en_attente'
+
+        if commit:
+            hopital.save()
+        return hopital
+
+
+class HospitalRegistrationStepOneForm(forms.ModelForm):
+    class Meta:
+        model = Hopital
+        fields = [
+            'nom',
+            'type',
+            'numero_enregistrement',
+            'nif',
+            'licence',
+            'date_expiration',
+        ]
+        labels = {
+            'numero_enregistrement': "Numero d'enregistrement",
+            'date_expiration': "Date d'expiration",
+        }
+        widgets = {
+            'nom': forms.TextInput(attrs={'placeholder': "Nom de l'hopital"}),
+            'type': forms.Select(),
+            'numero_enregistrement': forms.TextInput(attrs={'placeholder': "Numero d'enregistrement"}),
+            'nif': forms.TextInput(attrs={'placeholder': 'NIF'}),
+            'licence': forms.ClearableFileInput(attrs={'accept': '.pdf,application/pdf'}),
+            'date_expiration': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+    def clean_licence(self):
+        licence = self.cleaned_data.get('licence')
+        if licence and not licence.name.lower().endswith('.pdf'):
+            raise ValidationError("La licence doit etre un fichier PDF.")
+        return licence
+
+
+class HospitalRegistrationStepTwoForm(forms.ModelForm):
+    class Meta:
+        model = Hopital
+        fields = [
+            'adresse',
+            'ville',
+            'telephone',
+            'email',
+            'directeur',
+        ]
+        widgets = {
+            'adresse': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Adresse'}),
+            'ville': forms.TextInput(attrs={'placeholder': 'Ville'}),
+            'telephone': forms.TextInput(attrs={'type': 'tel', 'placeholder': 'Telephone'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'Email'}),
+            'directeur': forms.TextInput(attrs={'placeholder': 'Directeur'}),
+        }
+
 
 class DemandeInscriptionForm(forms.ModelForm):
     class Meta:
@@ -97,12 +212,11 @@ class PersonneAPrevenirForm(forms.ModelForm):
         model = PersonneAPrevenir
         fields = ['nom', 'relation', 'telephone', 'email']
         widget = {
-            'nom' : forms.Textarea(attrs= {'class': 'form-control', 'rows': 3}),
-            'relation' : forms.CharField(max_length=150),
-            'email' : forms.EmailField(),
-            'telephone' : forms.CharField(max_length=150),
+            'nom': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'relation': forms.CharField(max_length=150),
+            'email': forms.EmailField(),
+            'telephone': forms.CharField(max_length=150),
         }
-
 
 
 class MedecinCreationForm(forms.ModelForm):
@@ -119,12 +233,16 @@ class MedecinCreationForm(forms.ModelForm):
     def clean_email(self):
         email = self.cleaned_data.get('email')
         if CustomUser.objects.filter(username=email).exists():
-            raise ValidationError("Cet email est déjà utilisé pour un autre utilisateur.")
+            raise ValidationError("Cet email est deja utilise pour un autre utilisateur.")
         return email
 
+    @transaction.atomic
     def save(self, commit=True, hopital=None):
         import random
         import string
+
+        if not hopital:
+            raise ValueError("Hopital requis pour l'enregistrement du medecin.")
 
         password = ''.join(random.choices(string.ascii_letters + string.digits, k=8))
         email = self.cleaned_data['email']
@@ -142,35 +260,31 @@ class MedecinCreationForm(forms.ModelForm):
         user.is_active = True
         user.save()
 
-        if hopital:
-            medecin = Medecin.objects.create(
-                user=user,
-                specialite=self.cleaned_data['specialite'],
-                telephone=self.cleaned_data['telephone'],
-                hopital=hopital,
-                mot_de_passe_temporaire=password 
-            )
-        else:
-            raise ValueError("Hopital requis pour l'enregistrement du médecin.")
+        medecin = Medecin.objects.create(
+            user=user,
+            specialite=self.cleaned_data['specialite'],
+            telephone=self.cleaned_data['telephone'],
+            hopital=hopital,
+            mot_de_passe_temporaire=password
+        )
 
-        return user, password
-    
+        return user, password, medecin
+
 
 class RendezVousForm(forms.ModelForm):
     hopital = forms.ModelChoiceField(
         queryset=Hopital.objects.none(),
         required=True,
-        label="Hôpital",
+        label='Hopital',
         widget=forms.Select(attrs={'class': 'form-control'})
     )
 
     class Meta:
         model = RendezVous
-        fields = ['hopital', 'date', 'heure', 'motif'] 
-        widgets ={
+        fields = ['hopital', 'date', 'heure', 'motif']
+        widgets = {
             'date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
-            'heure':forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
-
+            'heure': forms.TimeInput(attrs={'class': 'form-control', 'type': 'time'}),
         }
 
     def __init__(self, *args, **kwargs):
@@ -178,13 +292,10 @@ class RendezVousForm(forms.ModelForm):
         super(RendezVousForm, self).__init__(*args, **kwargs)
 
         if user:
-            demandes = DemandeInscription.objects.filter(patient=user, approuvee=True)
+            demandes = DemandeInscription.objects.filter(patient=user, statut__in=['approuve', 'valide'])
             hopitaux_autorises = Hopital.objects.filter(id__in=demandes.values_list('hopital_id', flat=True))
             self.fields['hopital'].queryset = hopitaux_autorises
 
-
-
-    
 
 class MedecinProfilForm(forms.ModelForm):
     class Meta:
@@ -197,18 +308,19 @@ class MedecinInfosProForm(forms.ModelForm):
         model = Medecin
         fields = ['specialite']
         widgets = {
-            'adresse': forms.TextInput(attrs={'class': 'form-control', 'rows': 0 }),
+            'adresse': forms.TextInput(attrs={'class': 'form-control', 'rows': 0}),
         }
+
 
 class PatientUpdateForm(forms.ModelForm):
     class Meta:
         model = CustomUser
         fields = ['first_name', 'last_name', 'email', 'telephone', 'adresse', 'genre', 'date_naissance', 'photo']
         widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Prénom'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Prenom'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom'}),
             'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
-            'telephone': forms.TextInput(attrs={'class': 'form-control', 'type': 'tel', 'placeholder': 'Numéro de téléphone'}),
+            'telephone': forms.TextInput(attrs={'class': 'form-control', 'type': 'tel', 'placeholder': 'Numero de telephone'}),
             'adresse': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Adresse'}),
             'genre': forms.Select(attrs={'class': 'form-select'}),
             'date_naissance': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
@@ -219,7 +331,7 @@ class PatientUpdateForm(forms.ModelForm):
 class AssignPatientsForm(forms.ModelForm):
     class Meta:
         model = Medecin
-        fields = ['patients']  # patients doit être un ManyToManyField dans Medecin
+        fields = ['patients']
 
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
@@ -233,19 +345,18 @@ class AssignPatientsForm(forms.ModelForm):
 
 
 class SuiviMedicalForm(forms.ModelForm):
-
     class Meta:
         model = SuiviMedical
-        exclude = ["dossier"]
+        exclude = ['dossier']
         widgets = {
-            "poids": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Poids (kg)"}),
-            "taille": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Taille (cm)"}),
-            "tension_arterielle": forms.TextInput(attrs={"class": "form-control", "placeholder": "Ex: 12/8"}),
-            "temperature": forms.NumberInput(attrs={"class": "form-control", "placeholder": "Température (°C)"}),
-            "observations": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
-            "examens": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
-            "traitements": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
-            "prescriptions": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
+            'poids': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Poids (kg)'}),
+            'taille': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Taille (cm)'}),
+            'tension_arterielle': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Ex: 12/8'}),
+            'temperature': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Temperature (C)'}),
+            'observations': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'examens': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'traitements': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'prescriptions': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
 
 
@@ -253,16 +364,16 @@ class DossierMedicalForm(forms.ModelForm):
     class Meta:
         model = DossierMedical
         fields = [
-            "groupe_sanguin",
-            "antecedents",
-            "allergies",
-            "infos_complementaires",
+            'groupe_sanguin',
+            'antecedents',
+            'allergies',
+            'infos_complementaires',
         ]
         widgets = {
-            "groupe_sanguin": forms.TextInput(attrs={"class": "form-control"}),
-            "antecedents": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
-            "allergies": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
-            "infos_complementaires": forms.Textarea(attrs={"class": "form-control", "rows": 3}),
+            'groupe_sanguin': forms.TextInput(attrs={'class': 'form-control'}),
+            'antecedents': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'allergies': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'infos_complementaires': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
 
 
@@ -273,6 +384,7 @@ class OrdonnanceForm(forms.ModelForm):
         widgets = {
             'observations': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
         }
+
 
 class MedicamentPrescritForm(forms.ModelForm):
     class Meta:
@@ -285,7 +397,7 @@ class MedicamentPrescritForm(forms.ModelForm):
             'duree': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
-# Création du formset lié à Ordonnance
+
 MedicamentFormSet = inlineformset_factory(
     Ordonnance,
     MedicamentPrescrit,
@@ -296,7 +408,7 @@ MedicamentFormSet = inlineformset_factory(
 
 
 class ValidationRendezVousForm(forms.ModelForm):
-    medecin = forms.ModelChoiceField(queryset=Medecin.objects.none(), required=True, label="Attribuer un médecin")
+    medecin = forms.ModelChoiceField(queryset=Medecin.objects.none(), required=True, label='Attribuer un medecin')
 
     class Meta:
         model = RendezVous

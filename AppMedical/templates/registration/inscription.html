@@ -1,256 +1,33 @@
-{% load static %}
-{% load widget_tweaks %}
-<!DOCTYPE html>
-<html lang="en">
-
-
-<!-- Mirrored from medash.netlify.app/html/ui-register by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 25 Mar 2025 12:29:16 GMT -->
-<!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
-<head>
-    
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Multipurpose Dashboard</title>
-    <meta content="" name="description" />
-    <meta content="" name="author" />
-
-    <!-- Favicon -->
-    <link rel="shortcut icon" href="{% static 'assets/images/favicon.png' %}" type="image/x-icon" />
-    <!-- For iPhone -->
-    <link rel="apple-touch-icon-precomposed" href="{% static 'assets/images/apple-touch-icon-57-precomposed.png' %}">
-    <!-- For iPhone 4 Retina display -->
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{% static 'assets/images/apple-touch-icon-114-precomposed.png' %}">
-    <!-- For iPad -->
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{% static 'assets/images/apple-touch-icon-72-precomposed.png' %}">
-    <!-- For iPad Retina display -->
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{% static 'assets/images/apple-touch-icon-144-precomposed.png' %}">
-
-    <!-- CORE CSS FRAMEWORK - START -->
-    <link href="{% static 'assets/plugins/pace/pace-theme-flash.css' %}" rel="stylesheet" type="text/css" media="screen" />
-    <link href="{% static 'assets/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'assets/plugins/bootstrap/css/bootstrap-theme.min.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'assets1/vendor/fontawesome-free/css/all.min.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'assets/css/animate.min.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'assets/plugins/perfect-scrollbar/perfect-scrollbar.css' %}" rel="stylesheet" type="text/css" />
-    <!-- CORE CSS FRAMEWORK - END -->
-
-    <!-- HEADER SCRIPTS INCLUDED ON THIS PAGE - START -->
-
-    <link href="{% static 'assets/plugins/icheck/skins/all.css' %}" rel="stylesheet" type="text/css" media="screen" />
-
-    <!-- HEADER SCRIPTS INCLUDED ON THIS PAGE - END -->
-
-    <!-- CORE CSS TEMPLATE - START -->
-    <link href="{% static 'assets/css/style.css' %}" rel="stylesheet" type="text/css" />
-    <link href="{% static 'assets/css/responsive.css' %}" rel="stylesheet" type="text/css" />
-    <!-- CORE CSS TEMPLATE - END -->
-
-</head>
-<!-- END HEAD -->
-
-<!-- BEGIN BODY -->
-
-<body class=" login_page">
-
-    <div class="col-lg-6">
-        <section class="box ">
-
-         <style>
-                /* Center the registration card on the page */
-                body.login_page { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
-                body.login_page .col-lg-6 { max-width: 760px; width: 100%; margin: 0 auto; float: none; }
-                body.login_page .box { width: 100%; }
-                /* Responsive tweaks */
-                @media (max-width: 768px) {
-                    body.login_page { align-items: flex-start; padding-top: 30px; }
-                    body.login_page .col-lg-6 { padding: 0 15px; }
-                }
-         </style>
-
-               
-
-                <div class="content-body" style="padding-top:30px">
-
-                    {% if messages %}
-                        {% for message in messages %}
-                            <div class="alert {% if message.tags %}alert-{{ message.tags }}{% else %}alert-info{% endif %}">
-                                {{ message }}
-                            </div>
-                        {% endfor %}
-                    {% endif %}
-
-                    {% if form.non_field_errors %}
-                        <div class="alert alert-danger">{{ form.non_field_errors }}</div>
-                    {% endif %}
-
-                    <form method="POST" enctype="multipart/form-data">
-                    {% csrf_token %}
-                            <div class="row">
-                                <div class="col-xs-12">
-
-                                    <div class="col-lg-6 no-pl">
-                                        <div class="form-group">
-                                            <label for="id_username" class="form-label">Nom d'utilisateur</label>
-                                            {{ form.username|add_class:"form-control" }}
-                                            {% if form.username.errors %}
-                                              <div class="text-danger small">{{ form.username.errors.0 }}</div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-6 no-pr">
-                                        <div class="form-group">
-                                            <label for="id_last_name" class="form-label">Nom</label>
-                                            {{ form.last_name|add_class:"form-control" }}
-                                            {% if form.last_name.errors %}
-                                              <div class="text-danger small">{{ form.last_name.errors.0 }}</div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-6 no-pl">
-                                        <div class="form-group">
-                                            <label for="id_first_name" class="form-label">Prénom</label>
-                                            {{ form.first_name|add_class:"form-control" }}
-                                            {% if form.first_name.errors %}
-                                              <div class="text-danger small">{{ form.first_name.errors.0 }}</div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-6 no-pr">
-                                        <div class="form-group">
-                                            <label for="id_email" class="form-label">Email</label>
-                                            {{ form.email|add_class:"form-control" }}
-                                            {% if form.email.errors %}
-                                              <div class="text-danger small">{{ form.email.errors.0 }}</div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-6 no-pl">
-                                        <div class="form-group">
-                                            <label for="id_adresse" class="form-label">Adresse</label>
-                                            {{ form.adresse|add_class:"form-control" }}
-                                            {% if form.adresse.errors %}
-                                              <div class="text-danger small">{{ form.adresse.errors.0 }}</div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-6 no-pr">
-                                        <div class="form-group">
-                                            <label for="id_genre" class="form-label">Genre</label>
-                                            {{ form.genre|add_class:"form-control" }}
-                                            {% if form.genre.errors %}
-                                              <div class="text-danger small">{{ form.genre.errors.0 }}</div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-6 no-pl">
-                                        <div class="form-group">
-                                            <label for="id_telephone" class="form-label">Téléphone</label>
-                                            {{ form.telephone|add_class:"form-control" }}
-                                            {% if form.telephone.errors %}
-                                              <div class="text-danger small">{{ form.telephone.errors.0 }}</div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-6 no-pr">
-                                        <div class="form-group">
-                                            <label for="id_date_naissance" class="form-label">Date de naissance</label>
-                                            {{ form.date_naissance|add_class:"form-control" }}
-                                            {% if form.date_naissance.errors %}
-                                              <div class="text-danger small">{{ form.date_naissance.errors.0 }}</div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-6 no-pl">
-                                        <div class="form-group">
-                                            <label for="id_photo" class="form-label">Photo</label>
-                                            {{ form.photo|add_class:"form-control" }}
-                                            {% if form.photo.errors %}
-                                              <div class="text-danger small">{{ form.photo.errors.0 }}</div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-6 no-pr">
-                                        <div class="form-group">
-                                            <label for="id_role" class="form-label">Rôle</label>
-                                            {{ form.role|add_class:"form-control" }}
-                                            {% if form.role.errors %}
-                                              <div class="text-danger small">{{ form.role.errors.0 }}</div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-6 no-pl">
-                                        <div class="form-group">
-                                            <label for="id_password1" class="form-label">Mot de passe</label>
-                                            {{ form.password1|add_class:"form-control" }}
-                                            {% if form.password1.errors %}
-                                              <div class="text-danger small">{{ form.password1.errors.0 }}</div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-6 no-pr">
-                                        <div class="form-group">
-                                            <label for="id_password2" class="form-label">Confirmez le mot de passe</label>
-                                            {{ form.password2|add_class:"form-control" }}
-                                            {% if form.password2.errors %}
-                                              <div class="text-danger small">{{ form.password2.errors.0 }}</div>
-                                            {% endif %}
-                                        </div>
-                                    </div>
-
-                                    <div class="col-xs-12">
-                                        <button type="submit" class="btn btn-primary mt-10 btn-corner right-15">S'inscrire</button>
-                                        <a class='btn mt-10 btn-corner signup' href="{% url 'connexion' %}">Se connecter</a>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
+{% extends 'base.html' %}
+{% block title %}Inscription{% endblock %}
+{% block body_attrs %}class="auth-body"{% endblock %}
+{% block content %}
+<section class="auth-stage auth-stage-wide">
+    <div class="auth-shell auth-shell-split" data-reveal>
+        <aside class="auth-showcase">
+            <div class="auth-showcase-inner">
+                <div class="auth-showcase-mark">+</div>
+                <h1>Gestion Hopital</h1>
+                <p>Votre plateforme de gestion medicale tout-en-un. Simple, securisee, efficace.</p>
             </div>
-        </div>
+        </aside>
+        <section class="auth-form-side">
+            <div class="auth-tabs">
+                <a class="auth-tab" href="{% url 'connexion' %}">Connexion</a>
+                <a class="auth-tab is-active" href="{% url 'inscription' %}">Inscription</a>
+            </div>
+            <section class="auth-card auth-card-clean auth-card-clean-wide">
+                <h2 class="auth-title">Inscription</h2>
+                <form method="post" enctype="multipart/form-data" class="form-layout">
+                    {% csrf_token %}
+                    {% include 'includes/form_fields.html' with form=form %}
+                    <div class="button-row">
+                        <button type="submit">Creer mon compte</button>
+                    </div>
+                </form>
+                <p class="auth-switch">Vous avez deja un compte ? <a href="{% url 'connexion' %}">Se connecter</a></p>
+            </section>
+        </section>
     </div>
-</div>
 </section>
-
-    <!-- MAIN CONTENT AREA ENDS -->
-    <!-- LOAD FILES AT PAGE END FOR FASTER LOADING -->
-
-    <!-- CORE JS FRAMEWORK - START -->
-    <script src="{% static 'assets/js/jquery.min.js' %}"></script>
-    <script src="{% static 'assets/js/jquery.easing.min.js' %}"></script>
-    <script src="{% static 'assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'assets/plugins/pace/pace.min.js' %}"></script>
-    <script src="{% static 'assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js' %}"></script>
-    <script src="{% static 'assets/plugins/viewport/viewportchecker.js' %}"></script>
-    <script>
-        window.jQuery || document.write('<script src="{% static 'assets/js/jquery.min.js' %}"><\/script>');
-    </script>
-    <!-- CORE JS FRAMEWORK - END -->
-
-    <!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - START -->
-
-    <script src="{% static 'assets/plugins/icheck/icheck.min.js' %}"></script>
-    <!-- OTHER SCRIPTS INCLUDED ON THIS PAGE - END -->
-
-    <!-- CORE TEMPLATE JS - START -->
-    <script src="{% static 'assets/js/scripts.js' %}"></script>
-    <!-- END CORE TEMPLATE JS - END -->
-
-</body>
-
-
-<!-- Mirrored from medash.netlify.app/html/ui-register by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 25 Mar 2025 12:29:17 GMT -->
-</html>
+{% endblock %}

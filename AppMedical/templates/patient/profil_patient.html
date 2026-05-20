@@ -1,36 +1,17 @@
 {% extends 'patient/base_patient.html' %}
-{% load static %}
-
+{% block title %}Profil patient{% endblock %}
 {% block content %}
-<center>
-    <section id="main-content" class=" ">
-        <div class="container mt-5">
-            <div class="card shadow p-4" style="max-width: 600px; margin: right;">
-                <div class="text-center">
-                    {% if patient.photo %}
-                        <img src="{{ patient.photo.url }}" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
-                    {% else %}
-                        <img src="{% static 'data/profile/avatar-1.png' %}" class="rounded-circle mb-3" style="width: 120px; height: 120px;">
-                    {% endif %}
-                    <h4 class="mb-0">{{ patient.get_full_name }}</h4>
-                    <small class="text-muted">Profil Patient</small>
-                </div>
-
-                <hr>
-
-                <div class="mt-3">
-                    <p><strong>Email :</strong> {{ patient.email }}</p>
-                    <p><strong>Téléphone :</strong> {{ patient.telephone }}</p>
-                    <p><strong>Date de naissance :</strong> {{ patient.date_naissance }}</p>
-                    <p><strong>Genre :</strong> {{ patient.get_genre_display }}</p>
-                    <p><strong>Adresse :</strong> {{ patient.adresse }}</p>
-                </div>
-
-                <div class="text-center mt-4">
-                    <a href="{% url 'modifier_profil_patient' %}" class="btn btn-primary">Modifier mon profil</a>
-                </div>
-            </div>
-        </div>
-    </section>
-</center>
+<section class="profile-card" data-reveal>
+    <span class="eyebrow">Mon profil</span>
+    <h1 class="section-title" style="font-size:2.3rem;">{{ patient.get_full_name|default:patient.username }}</h1>
+    <div class="detail-list">
+        <div><strong>Email</strong>{{ patient.email }}</div>
+        <div><strong>Telephone</strong>{{ patient.telephone|default:"Non renseigne" }}</div>
+        <div><strong>Adresse</strong>{{ patient.adresse|default:"Non renseignee" }}</div>
+        <div><strong>Date de naissance</strong>{{ patient.date_naissance|date:"d/m/Y"|default:"Non renseignee" }}</div>
+    </div>
+    <div class="button-row">
+        <a class="btn btn-secondary" href="{% url 'modifier_profil_patient' %}">Modifier mon profil</a>
+    </div>
+</section>
 {% endblock %}

@@ -1,43 +1,60 @@
-{% extends 'hopital/base_admin_hopital.html' %}
+{% extends 'base.html' %}
+{% block title %}Demandes en attente{% endblock %}
+{% block body_attrs %}class="dashboard-ui admin-dashboard hospital-master-page"{% endblock %}
 {% block content %}
-<section id="main-content" class=" ">
-<div class="container mt-4">
-    <h2>Demandes en attente</h2>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>Patient</th>
-                <th>Hôpital</th>
-                <th>Date demande</th>
-                <th>Groupe sanguin</th>
-                <th>Antécédents</th>
-                <th>Allergies</th>
-                <th>Informations complementaire</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for demande in demandes %}
-            <tr>
-                <td>{{ demande.patient.first_name }} {{ demande.patient.last_name }}</td>
-                <td>{{ demande.hopital.nom }}</td>
-                <td>{{ demande.date_demande }}</td>
-                <td>{{ demande.groupe_sanguin }}</td>
-                <td>{{ demande.antecedents }}</td>
-                <td>{{ demande.allergies }}</td>
-                <td>{{ demande.informations_complementaires }}</td>
-                <td>
-                    <a href="{% url 'approuver_demande' demande.id %}" class="btn btn-success btn-sm">Approuver</a>
-                    <a href="{% url 'refuser_demande' demande.id %}" class="btn btn-danger btn-sm">Refuser</a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="5">Aucune demande en attente.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+<section class="content-stack hospital-page" data-reveal>
+    <section class="hospital-section-header">
+        <div>
+            <span class="eyebrow hospital-eyebrow">Hopital</span>
+            <h1 class="section-title hospital-title">Demandes en attente</h1>
+            <p class="section-subtitle hospital-subtitle">Validez rapidement les demandes de patients avant prise en charge.</p>
+        </div>
+        <span class="hospital-summary-pill">Flux d'admissions</span>
+    </section>
+
+    <section class="table-card hospital-table-card">
+        <div class="hospital-table-banner">
+            <span class="hospital-banner-dot amber"></span>
+            <strong>Demandes en attente</strong>
+            <span>Liste des demandes a traiter par l'administration.</span>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Hopital</th>
+                        <th>Date demande</th>
+                        <th>Groupe sanguin</th>
+                        <th>Antecedents</th>
+                        <th>Allergies</th>
+                        <th>Informations complementaires</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for demande in demandes %}
+                        <tr>
+                            <td>{{ demande.patient.get_full_name|default:demande.patient.username }}</td>
+                            <td>{{ demande.hopital.nom }}</td>
+                            <td>{{ demande.date_demande|date:"d/m/Y H:i" }}</td>
+                            <td>{{ demande.groupe_sanguin|default:"Non renseigne" }}</td>
+                            <td>{{ demande.antecedents|default:"Non renseigne" }}</td>
+                            <td>{{ demande.allergies|default:"Non renseigne" }}</td>
+                            <td>{{ demande.informations_complementaires|default:"Non renseigne" }}</td>
+                            <td>
+                                <div class="button-row hospital-button-row">
+                                    <a class="btn btn-primary" href="{% url 'approuver_demande' demande.id %}">Approuver</a>
+                                    <a class="btn btn-danger" href="{% url 'refuser_demande' demande.id %}">Refuser</a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="8">Aucune demande en attente.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
 </section>
 {% endblock %}

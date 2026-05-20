@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}Inscription{% endblock %}
+{% block body_attrs %}class="auth-body"{% endblock %}
+{% block content %}
+<section class="auth-stage auth-stage-wide">
+    <div class="auth-shell auth-shell-split" data-reveal>
+        <aside class="auth-showcase">
+            <div class="auth-showcase-inner">
+                <div class="auth-showcase-mark">+</div>
+                <h1>Gestion Hopital</h1>
+                <p>Remplissez le formulaire en deux etapes pour enregistrer votre hopital.</p>
+            </div>
+        </aside>
+        <section class="auth-form-side">
+            <div class="auth-tabs">
+                <a class="auth-tab" href="{% url 'connexion' %}">Connexion</a>
+                <a class="auth-tab is-active" href="{% url 'inscription_hopital' %}">Inscription</a>
+            </div>
+            <section class="auth-card auth-card-clean auth-card-clean-wide">
+                <h2 class="auth-title">Inscription Hopital</h2>
+
+                <div class="form-stepper">
+                    <div class="form-stepper-item is-active" data-step-indicator="1">
+                        <span class="form-stepper-index">1</span>
+                        <span>Identite</span>
+                    </div>
+                    <div class="form-stepper-item" data-step-indicator="2">
+                        <span class="form-stepper-index">2</span>
+                        <span>Coordonnees</span>
+                    </div>
+                </div>
+
+                <form method="post" enctype="multipart/form-data" class="form-layout" data-form-wizard data-start-step="{{ hospital_form_step|default:1 }}">
+                    {% csrf_token %}
+
+                    {% if form.non_field_errors %}
+                        {% for error in form.non_field_errors %}
+                            <div class="field-error">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <section class="form-step{% if hospital_form_step|default:1 == 1 %} is-active{% endif %}" data-form-step="1"{% if hospital_form_step|default:1 != 1 %} hidden{% endif %}>
+                        <div class="form-grid">
+                            <div class="field-group">
+                                <label for="{{ form.nom.id_for_label }}">{{ form.nom.label }}</label>
+                                {{ form.nom|add_class:'frontend-field' }}
+                                {% for error in form.nom.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                            </div>
+                            <div class="field-group">
+                                <label for="{{ form.type.id_for_label }}">{{ form.type.label }}</label>
+                                {{ form.type|add_class:'frontend-field' }}
+                                {% for error in form.type.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                            </div>
+                            <div class="field-group">
+                                <label for="{{ form.numero_enregistrement.id_for_label }}">{{ form.numero_enregistrement.label }}</label>
+                                {{ form.numero_enregistrement|add_class:'frontend-field' }}
+                                {% for error in form.numero_enregistrement.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                            </div>
+                            <div class="field-group">
+                                <label for="{{ form.nif.id_for_label }}">{{ form.nif.label }}</label>
+                                {{ form.nif|add_class:'frontend-field' }}
+                                {% for error in form.nif.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                            </div>
+                            <div class="field-group">
+                                <label for="{{ form.licence.id_for_label }}">{{ form.licence.label }}</label>
+                                {{ form.licence|add_class:'frontend-field' }}
+                                {% for error in form.licence.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                            </div>
+                            <div class="field-group">
+                                <label for="{{ form.date_expiration.id_for_label }}">{{ form.date_expiration.label }}</label>
+                                {{ form.date_expiration|add_class:'frontend-field' }}
+                                {% for error in form.date_expiration.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="button-row form-step-actions">
+                            <button type="button" class="btn btn-primary" data-step-next>Suivant</button>
+                        </div>
+                    </section>
+
+                    <section class="form-step{% if hospital_form_step == 2 %} is-active{% endif %}" data-form-step="2"{% if hospital_form_step != 2 %} hidden{% endif %}>
+                        <div class="form-grid">
+                            <div class="field-group">
+                                <label for="{{ form.adresse.id_for_label }}">{{ form.adresse.label }}</label>
+                                {{ form.adresse|add_class:'frontend-field' }}
+                                {% for error in form.adresse.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                            </div>
+                            <div class="field-group">
+                                <label for="{{ form.ville.id_for_label }}">{{ form.ville.label }}</label>
+                                {{ form.ville|add_class:'frontend-field' }}
+                                {% for error in form.ville.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                            </div>
+                            <div class="field-group">
+                                <label for="{{ form.telephone.id_for_label }}">{{ form.telephone.label }}</label>
+                                {{ form.telephone|add_class:'frontend-field' }}
+                                {% for error in form.telephone.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                            </div>
+                            <div class="field-group">
+                                <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                                {{ form.email|add_class:'frontend-field' }}
+                                {% for error in form.email.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                            </div>
+                            <div class="field-group">
+                                <label for="{{ form.directeur.id_for_label }}">{{ form.directeur.label }}</label>
+                                {{ form.directeur|add_class:'frontend-field' }}
+                                {% for error in form.directeur.errors %}<div class="field-error">{{ error }}</div>{% endfor %}
+                            </div>
+                        </div>
+
+                        <div class="button-row form-step-actions form-step-actions-split">
+                            <button type="button" class="btn btn-light" data-step-prev>Retour</button>
+                            <button type="submit">Soumettre la demande</button>
+                        </div>
+                    </section>
+                </form>
+
+                <p class="auth-switch">Vous avez deja un compte ? <a href="{% url 'connexion' %}">Se connecter</a></p>
+            </section>
+        </section>
+    </div>
+</section>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const wizard = document.querySelector("[data-form-wizard]");
+    if (!wizard) return;
+
+    const steps = Array.from(wizard.querySelectorAll("[data-form-step]"));
+    const indicators = Array.from(document.querySelectorAll("[data-step-indicator]"));
+    let currentStep = Number(wizard.dataset.startStep || 1);
+
+    function renderStep(stepNumber) {
+        currentStep = stepNumber;
+        steps.forEach((step) => {
+            const isActive = Number(step.dataset.formStep) === stepNumber;
+            step.classList.toggle("is-active", isActive);
+            step.hidden = !isActive;
+        });
+
+        indicators.forEach((indicator) => {
+            indicator.classList.toggle("is-active", Number(indicator.dataset.stepIndicator) === stepNumber);
+        });
+    }
+
+    function validateCurrentStep() {
+        const currentPanel = wizard.querySelector(`[data-form-step="${currentStep}"]`);
+        if (!currentPanel) return true;
+
+        const fields = currentPanel.querySelectorAll("input, select, textarea");
+        for (const field of fields) {
+            if (!field.checkValidity()) {
+                field.reportValidity();
+                return false;
+            }
+        }
+        return true;
+    }
+
+    wizard.querySelectorAll("[data-step-next]").forEach((button) => {
+        button.addEventListener("click", function () {
+            if (validateCurrentStep()) {
+                renderStep(2);
+            }
+        });
+    });
+
+    wizard.querySelectorAll("[data-step-prev]").forEach((button) => {
+        button.addEventListener("click", function () {
+            renderStep(1);
+        });
+    });
+
+    renderStep(currentStep);
+});
+</script>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}Utilisateurs du systeme{% endblock %}
+{% block body_attrs %}class="dashboard-ui admin-dashboard admin-master-page"{% endblock %}
+{% block content %}
+<section class="content-stack" data-reveal>
+    <section class="table-card">
+        <span class="eyebrow">Administration</span>
+        <h1 class="section-title" style="font-size:2.2rem;">Utilisateurs du systeme</h1>
+        <p class="section-subtitle">Consultez tous les comptes et desactivez ou reactivez l'acces selon les besoins.</p>
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nom</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Statut</th>
+                        <th>Inscription</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for utilisateur in utilisateurs %}
+                        <tr>
+                            <td>{{ utilisateur.get_full_name|default:utilisateur.username }}</td>
+                            <td>{{ utilisateur.email }}</td>
+                            <td>{{ utilisateur.get_role_display }}</td>
+                            <td>
+                                {% if utilisateur.is_active %}
+                                    <span class="status-pill success">Actif</span>
+                                {% else %}
+                                    <span class="status-pill danger">Inactif</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ utilisateur.created_at|date:"d/m/Y H:i" }}</td>
+                            <td>
+                                {% if utilisateur == request.user %}
+                                    <span class="status-pill pending">Compte courant</span>
+                                {% else %}
+                                    <form method="post" action="{% url 'basculer_statut_utilisateur' utilisateur.id %}">
+                                        {% csrf_token %}
+                                        {% if utilisateur.is_active %}
+                                            <button type="submit" class="btn btn-danger">Desactiver</button>
+                                        {% else %}
+                                            <button type="submit" class="btn btn-secondary">Reactiver</button>
+                                        {% endif %}
+                                    </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6">Aucun utilisateur trouve.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</section>
+{% endblock %}

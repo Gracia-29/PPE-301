@@ -1,21 +1,32 @@
-{% extends 'patient/base_patient.html' %}
+{% extends 'base.html' %}
+{% block title %}Hopitaux{% endblock %}
+{% block body_attrs %}class="dashboard-ui patient-area patient-dashboard"{% endblock %}
 {% block content %}
-<section id="main-content" class=" ">
-    <h1>Bienvenue sur la page des hôpitaux</h1>
-<div class="container mt-3">
-    <h2>Liste des hôpitaux</h2>
-    <ul class="list-group">
+<section class="hero" data-reveal>
+    <div>
+        <span class="eyebrow">Reseau hospitalier</span>
+        <h1>Choisissez l'etablissement adapte a votre suivi.</h1>
+        <p>Seuls les hopitaux confirmes apparaissent dans cette liste avec acces direct a la demande d'inscription.</p>
+    </div>
+    <div class="metric-card">
+        <div class="metric-value">{{ hopitaux|length }}</div>
+        <p class="muted">Hopitaux confirmes repertories dans la plateforme.</p>
+    </div>
+</section>
+<section class="card-grid content-stack">
     {% for hopital in hopitaux %}
-        <div class="card">
-            <h4>{{ hopital.nom }}</h4>
-            <p>{{ hopital.adresse }}</p>
-            <a href="{% url 'demande_inscription' hopital.id %}" class="btn btn-primary">
-                S’inscrire
-            </a>
-        </div>
+        <article class="panel" data-reveal>
+            <span class="tag">Hopital</span>
+            <h3>{{ hopital.nom }}</h3>
+            <p class="muted">{{ hopital.adresse }}</p>
+            <div class="button-row">
+                {% if user.is_authenticated and user.role == 'patient' %}
+                    <a class="btn btn-primary" href="{% url 'demande_inscription' hopital.id %}">Demander une inscription</a>
+                {% endif %}
+            </div>
+        </article>
+    {% empty %}
+        <div class="empty-state">Aucun hopital confirme n'est disponible pour le moment.</div>
     {% endfor %}
-
-    </ul>
-</div>
 </section>
 {% endblock %}
