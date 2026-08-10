@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@400;500;600;700;800&display=swap');
+
 
 /*
 |--------------------------------------------------------------------------
@@ -148,10 +149,9 @@ body.auth-body .page {
 }
 .hero h1, .section-title { margin: 14px 0 10px; font-size: clamp(2rem, 4vw, 3.4rem); line-height: 1.05; }
 .hero p, .section-subtitle, .muted { color: var(--text-soft); line-height: 1.7; }
-.hero-grid, .card-grid, .metric-grid, .quick-grid { display: grid; gap: 18px; }
+.hero-grid, .card-grid, .metric-grid { display: grid; gap: 18px; }
 .hero-grid, .metric-grid { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
 .card-grid { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
-.quick-grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
 .metric-card, .panel, .table-card, .timeline-card, .profile-card, .empty-state, .welcome-strip { padding: 24px; }
 .metric-value { font-size: 2rem; font-weight: 800; margin-top: 12px; }
 .tag, .status-pill {
@@ -502,7 +502,7 @@ body.dashboard-ui .sidebar {
   border-radius: 0;
   padding: 20px 12px 18px;
   background: #ffffff;
-  color: #66a6f3;
+  color:  #8cc4dc;
   border-right: 1px solid rgba(23, 54, 91, 0.08);
   box-shadow: none;
   backdrop-filter: none;
@@ -1311,95 +1311,7 @@ body.hospital-master-page .page {
   max-width: 760px;
 }
 
-.hospital-hero-badge {
-  min-width: 230px;
-  padding: 18px 20px;
-  border-radius: 24px;
-  background: rgba(255, 255, 255, 0.16);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  backdrop-filter: blur(10px);
-}
 
-.hospital-hero-badge-label {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 0.82rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(255, 255, 255, 0.72);
-}
-
-.hospital-hero-badge strong,
-.hospital-hero-badge span {
-  display: block;
-}
-
-.hospital-hero-badge strong {
-  font-size: 1.2rem;
-}
-
-.hospital-hero-badge span:last-child {
-  margin-top: 8px;
-  color: rgba(255, 255, 255, 0.82);
-}
-
-.hospital-stat-card {
-  position: relative;
-  overflow: hidden;
-  border: 0;
-  border-radius: 24px;
-  box-shadow: 0 22px 36px rgba(24, 67, 112, 0.08);
-}
-
-.hospital-stat-card::after {
-  content: "";
-  position: absolute;
-  inset: auto -30px -56px auto;
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.18);
-}
-
-.hospital-stat-card.coral { background: linear-gradient(135deg, #fff5ef, #fffdf8); }
-.hospital-stat-card.mint { background: linear-gradient(135deg, #edfffb, #f4fffc); }
-.hospital-stat-card.amber { background: linear-gradient(135deg, #fff8e9, #fffdf7); }
-.hospital-stat-card.violet { background: linear-gradient(135deg, #f6f0ff, #fcf9ff); }
-
-.hospital-stat-card .dash-stat-value {
-  font-size: 1.18rem;
-}
-
-.hospital-actions-panel {
-  border-radius: 26px;
-  box-shadow: 0 22px 40px rgba(24, 67, 112, 0.08);
-}
-
-.hospital-action-row {
-  grid-template-columns: auto minmax(0, 1fr) auto auto;
-  gap: 18px;
-  margin: 14px 18px;
-  padding: 16px 18px;
-  border: 1px solid rgba(15, 118, 110, 0.08);
-  border-radius: 22px;
-  background: linear-gradient(135deg, rgba(244, 255, 251, 0.96), rgba(250, 251, 255, 0.96));
-  box-shadow: 0 12px 24px rgba(15, 118, 110, 0.05);
-}
-
-.hospital-action-row:first-of-type {
-  margin-top: 18px;
-}
-
-.hospital-action-row:last-child {
-  margin-bottom: 18px;
-}
-
-.dash-avatar.coral {
-  background: #fff0eb;
-  color: #f06d4f;
-}
-
-.hospital-action-chip,
 .hospital-summary-pill {
   display: inline-flex;
   align-items: center;
@@ -1524,15 +1436,6 @@ body.hospital-master-page .btn.btn-light {
   .hospital-section-header {
     padding: 24px;
   }
-
-  .hospital-action-row {
-    grid-template-columns: auto minmax(0, 1fr);
-  }
-
-  .hospital-action-chip,
-  .hospital-action-row .btn {
-    justify-self: start;
-  }
 }
 
 @media (max-width: 760px) {
@@ -1541,11 +1444,6 @@ body.hospital-master-page .btn.btn-light {
     gap: 16px;
     padding: 20px 18px;
     border-radius: 22px;
-  }
-
-  .hospital-hero-badge {
-    min-width: 0;
-    width: 100%;
   }
 
   .hospital-table-banner {
@@ -1567,7 +1465,7 @@ body.hospital-master-page .btn.btn-light {
 .admin-master-heading h1 {
   margin-bottom: 12px;
   font-size: clamp(2.1rem, 3.6vw, 3.2rem);
-  letter-spacing: -0.04em;
+  letter-spacing: -0.01em;
   line-height: 0.98;
 }
 
@@ -1748,11 +1646,6 @@ body.hospital-master-page .btn.btn-light {
   line-height: 1;
 }
 
-.admin-actions-panel {
-  border-radius: 24px;
-  box-shadow: 0 18px 40px rgba(24, 67, 112, 0.08);
-}
-
 .admin-recent-panel {
   border-radius: 24px;
   box-shadow: 0 18px 40px rgba(24, 67, 112, 0.08);
@@ -1853,105 +1746,6 @@ body.hospital-master-page .btn.btn-light {
   font-size: 0.92rem;
 }
 
-.admin-actions-panel .dash-panel-head {
-  padding: 18px 22px;
-}
-
-.admin-panel-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 38px;
-  padding: 0 16px;
-  border-radius: 12px;
-  background: #edf4ff;
-  color: #2f79c7;
-  font-weight: 800;
-}
-
-.admin-action-row {
-  grid-template-columns: auto minmax(0, 1fr) minmax(220px, 490px) auto;
-  gap: 18px;
-  margin: 12px 20px;
-  padding: 14px 14px 14px 16px;
-  border: 1px solid rgba(23, 54, 91, 0.06);
-  border-radius: 20px;
-  box-shadow: 0 10px 24px rgba(24, 67, 112, 0.04);
-}
-
-.admin-action-row:first-of-type {
-  margin-top: 0;
-}
-
-.admin-action-row:last-child {
-  margin-bottom: 20px;
-}
-
-.admin-action-row .dash-avatar {
-  width: 46px;
-  height: 46px;
-  border-radius: 15px;
-  font-size: 1.05rem;
-  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.9);
-}
-
-.admin-action-row .dash-list-main strong {
-  font-size: 1rem;
-}
-
-.admin-action-row .dash-list-main span {
-  font-size: 0.92rem;
-  line-height: 1.45;
-}
-
-.admin-action-btn {
-  min-height: 56px;
-  border: 0;
-  border-radius: 14px;
-  font-weight: 800;
-  box-shadow: none;
-  font-size: 0.95rem;
-}
-
-.admin-btn-icon {
-  width: 18px;
-  height: 18px;
-  display: inline-grid;
-  place-items: center;
-}
-
-.admin-btn-icon svg {
-  width: 18px;
-  height: 18px;
-  stroke: currentColor;
-}
-
-.admin-action-btn-green {
-  background: #ebf8ef;
-  color: #25a98a;
-}
-
-.admin-action-btn-amber {
-  background: #fff4df;
-  color: #f08a00;
-}
-
-.admin-action-btn-blue {
-  background: #edf4ff;
-  color: #2f79c7;
-}
-
-.admin-action-btn-violet {
-  background: #f2ecff;
-  color: #7b4ef6;
-}
-
-.admin-action-arrow {
-  color: #6f86a2;
-  font-size: 2.1rem;
-  line-height: 1;
-}
-
 @media (max-width: 1180px) {
   .dashboard-stats.four,
   .dashboard-grid.two-up,
@@ -2030,11 +1824,6 @@ body.hospital-master-page .btn.btn-light {
   .dash-note-row {
     grid-template-columns: 1fr;
     align-items: flex-start;
-  }
-
-  .admin-action-row {
-    margin: 12px 14px;
-    padding: 16px;
   }
 
   .admin-recent-item {
@@ -2602,13 +2391,21 @@ body.hospital-master-page .page::after {
 .hospital-dashboard-hero {
   min-height: 170px;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 172px 260px;
+  grid-template-columns: minmax(0, 1fr) auto;
   align-items: start;
-  gap: 42px;
+  gap: 24px;
 }
 
 .hospital-hero-copy {
   padding: 26px 0 0 26px;
+}
+
+.hospital-hero-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  margin-top: 8px;
 }
 
 .hospital-soft-pill,
@@ -2648,11 +2445,10 @@ body.hospital-master-page .page::after {
 .hospital-alarm-card,
 .hospital-mode-card,
 .hospital-sketch-card,
-.hospital-admin-list,
-.hospital-quick-panel {
+.hospital-admin-list {
   background: rgba(255, 255, 255, 0.96);
   border: 1px solid rgba(13, 30, 45, 0.06);
-  box-shadow: 0 18px 42px rgba(27, 47, 63, 0.14);
+  box-shadow: 1S0 18px 42px rgba(27, 47, 63, 0.14);
 }
 
 .hospital-alarm-card {
@@ -2671,8 +2467,8 @@ body.hospital-master-page .page::after {
 
 .hospital-mode-card {
   position: relative;
-  align-self: start;
-  margin-top: 22px;
+  align-self: flex-start;
+  margin-top: 0;
   padding: 18px 18px 16px;
   border-radius: 16px;
   color: #2b1c12;
@@ -2697,8 +2493,8 @@ body.hospital-master-page .page::after {
   right: 14px;
   padding: 5px 10px;
   border-radius: 999px;
-  background: #f7d7ad;
-  color: #8a551e;
+  background: #b9d1f7;
+  color: #121969;
   font-style: normal;
   font-size: 0.8rem;
   font-weight: 700;
@@ -2984,8 +2780,7 @@ body.hospital-master-page .page::after {
   gap: 16px;
 }
 
-.hospital-admin-list,
-.hospital-quick-panel {
+.hospital-admin-list {
   border-radius: 18px;
   overflow: hidden;
 }
@@ -3081,39 +2876,6 @@ body.hospital-master-page .page::after {
   border-color: #d57743;
   color: #ffffff;
   box-shadow: 0 0 0 5px rgba(239, 146, 95, 0.22);
-}
-
-.hospital-quick-panel {
-  padding-bottom: 12px;
-}
-
-.hospital-quick-panel a {
-  min-height: 46px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 12px;
-  margin: 10px 18px;
-  padding: 7px 10px 7px 16px;
-  border-radius: 12px;
-  background: #fbfdff;
-  border: 1px solid rgba(13, 30, 45, 0.08);
-  box-shadow: 0 7px 16px rgba(27, 47, 63, 0.08);
-}
-
-.hospital-quick-panel span {
-  font-size: 0.85rem;
-}
-
-.hospital-quick-panel strong {
-  min-height: 34px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 14px;
-  border-radius: 10px;
-  border: 2px solid #111;
-  color: #111;
 }
 
 @media (max-width: 1280px) {
@@ -3463,8 +3225,7 @@ body.hospital-master-page .page::after {
     gap: 16px;
   }
 
-  .hospital-admin-list,
-  .hospital-quick-panel {
+  .hospital-admin-list {
     min-height: 229px;
     border-radius: 18px;
     box-shadow: 0 15px 28px rgba(27, 47, 63, 0.12);
@@ -3519,34 +3280,6 @@ body.hospital-master-page .page::after {
   .hospital-outline-btn {
     min-height: 35px;
     padding: 0 14px;
-    border-width: 1.5px;
-    border-radius: 10px;
-    font-size: 0.82rem;
-  }
-
-  .hospital-quick-panel .hospital-panel-head {
-    justify-content: flex-end;
-  }
-
-  .hospital-quick-panel .hospital-panel-head h2 {
-    font-size: 0.84rem;
-  }
-
-  .hospital-quick-panel a {
-    min-height: 41px;
-    margin: 8px 18px;
-    padding: 6px 8px 6px 14px;
-    border-radius: 12px;
-  }
-
-  .hospital-quick-panel span {
-    font-size: 0.72rem;
-  }
-
-  .hospital-quick-panel strong {
-    min-height: 34px;
-    min-width: 68px;
-    padding: 0 12px;
     border-width: 1.5px;
     border-radius: 10px;
     font-size: 0.82rem;
@@ -3740,39 +3473,40 @@ body.hospital-doctors-page .page {
 }
 
 .hospital-mode-badge {
-  min-width: 150px;
-  min-height: 70px;
+  min-width: 8px;
+  min-height: 16px;
   display: grid;
   align-content: center;
   position: relative;
-  padding: 12px 18px 12px 28px;
-  border-radius: 18px;
+  padding: 8px 10px;
+  border-radius: 14px;
   background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 18px 36px rgba(46, 62, 82, 0.12);
+  box-shadow: 0 10px 24px rgba(46, 62, 82, 0.1);
 }
 
 .hospital-mode-badge span {
   position: absolute;
-  left: 12px;
-  top: 31px;
-  width: 5px;
-  height: 5px;
+  left: 10px;
+  top: 25px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
   background: #e3a72f;
 }
 
 .hospital-mode-badge strong {
-  font-size: 0.94rem;
+  font-size: 0.8rem;
 }
 
 .hospital-mode-badge small {
   position: absolute;
-  top: 10px;
-  right: 12px;
-  padding: 1px 10px;
+  top: 8px;
+  right: 10px;
+  padding: 1px 8px;
   border-radius: 999px;
   background: #f5d8a2;
   color: #8a5b16;
+  font-size: 0.68rem;
   font-weight: 700;
 }
 
@@ -3846,7 +3580,7 @@ body.hospital-doctors-page .page {
   min-height: 42px;
   padding: 0 16px;
   border-radius: 10px;
-  background: #1f2c38;
+  background: #f2762d;
   color: #ffffff;
   box-shadow: none;
 }
@@ -3860,20 +3594,20 @@ body.hospital-doctors-page .page {
   justify-self: end;
   padding: 0 24px;
   border-radius: 14px;
-  background: #f2762d;
+  background: linear-gradient(180deg, rgba(83, 167, 245, 0.96));
   color: #ffffff;
   box-shadow: 0 12px 28px rgba(242, 118, 45, 0.34);
   font-weight: 800;
 }
 
-.hospital-add-doctor span {
+.hospital-add-doctor span { 
   width: 24px;
   height: 24px;
   display: inline-grid;
   place-items: center;
   border-radius: 50%;
   background: #ffffff;
-  color: #f2762d;
+  color: rgba(83, 167, 245, 0.96);
   font-size: 1.15rem;
   line-height: 1;
 }
@@ -4040,7 +3774,7 @@ body.hospital-doctors-page .page {
 /* ==================== Sidebar medical dashboard unifiee ==================== */
 :root {
   --medical-sidebar-width: 300px;
-  --medical-sidebar-bg: #d8e7f6;
+  --medical-sidebar-bg: ##a3c9d9;
   --medical-sidebar-header: #3a98df;
   --medical-sidebar-text: #1d2f43;
   --medical-sidebar-muted: #929ba4;
